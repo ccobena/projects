@@ -381,6 +381,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
             ISDNAddressString mscAddress = capProvider.getMAPParameterFactory().createISDNAddressString(AddressNature.international_number, NumberingPlan.ISDN, "59397999138");
             CalledPartyBCDNumber calledPartyBCDNumber = capProvider.getCAPParameterFactory().createCalledPartyBCDNumber(AddressNature.unknown, NumberingPlan.ISDN, "50400993402218");
             Calendar now = Calendar.getInstance();
+            //comment de prueba
             TimeAndTimezone timeAndTimezone = capProvider.getCAPParameterFactory().createTimeAndTimezone(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1 , now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND), -5);
             curDialog.addInitialDPRequest(serviceKey,null,callingPartyNumberCap,callingPartysCategoryInap,null,iPSSPCapabilities,locationNumberCap,null,null,highLayerCompatibilityInap,null,bearerCapability,EventTypeBCSM.collectedInfo,null,null,null,null,null,null,null,false,imsi,null,locationInformation,extBasicServiceCode,callReferenceNumber,mscAddress,calledPartyBCDNumber,timeAndTimezone,false,null);
             /*curDialog.addInitialDPRequest(serviceKey, calledPartyNumber, null, null, null, null, null, null, null, null, null,
