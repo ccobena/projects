@@ -17,12 +17,13 @@ public class cc {
 			
 			//401c413903c1cc
 			//actualizado por CC 
-			System.out.println(GregorianCalendar.getInstance().YEAR); 
-			System.out.println(Calendar.getInstance().MONTH);
-			System.out.println(Calendar.getInstance().DAY_OF_MONTH);
-			System.out.println(Calendar.getInstance().HOUR_OF_DAY);
-			System.out.println(Calendar.getInstance().MINUTE);
-			System.out.println(Calendar.getInstance().SECOND);
+			Calendar now = Calendar.getInstance(); 
+			System.out.println(now.get(Calendar.YEAR)); 
+			System.out.println(Calendar.getInstance().get(Calendar.MONTH) + 1 );
+			System.out.println(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+			System.out.println(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+			System.out.println(Calendar.getInstance().get(Calendar.MINUTE));
+			System.out.println(Calendar.getInstance().get(Calendar.SECOND));
             
 			
 		}catch(Exception e){
