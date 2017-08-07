@@ -380,7 +380,8 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
             CallReferenceNumber callReferenceNumber = capProvider.getMAPParameterFactory().createCallReferenceNumber(new byte[] { (byte)0x40, (byte)0x1c, (byte)0x41, (byte)0x39, (byte)0x03, (byte)0xC1, (byte)0xCC });
             ISDNAddressString mscAddress = capProvider.getMAPParameterFactory().createISDNAddressString(AddressNature.international_number, NumberingPlan.ISDN, "59397999138");
             CalledPartyBCDNumber calledPartyBCDNumber = capProvider.getCAPParameterFactory().createCalledPartyBCDNumber(AddressNature.unknown, NumberingPlan.ISDN, "50400993402218");
-            TimeAndTimezone timeAndTimezone = capProvider.getCAPParameterFactory().createTimeAndTimezone(Calendar.getInstance().YEAR, Calendar.getInstance().MONTH, Calendar.getInstance().DAY_OF_MONTH, Calendar.getInstance().HOUR_OF_DAY, Calendar.getInstance().MINUTE, Calendar.getInstance().SECOND, -5);
+            Calendar now = Calendar.getInstance();
+            TimeAndTimezone timeAndTimezone = capProvider.getCAPParameterFactory().createTimeAndTimezone(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1 , now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND), -5);
             curDialog.addInitialDPRequest(serviceKey,null,callingPartyNumberCap,callingPartysCategoryInap,null,iPSSPCapabilities,locationNumberCap,null,null,highLayerCompatibilityInap,null,bearerCapability,EventTypeBCSM.collectedInfo,null,null,null,null,null,null,null,false,imsi,null,locationInformation,extBasicServiceCode,callReferenceNumber,mscAddress,calledPartyBCDNumber,timeAndTimezone,false,null);
             /*curDialog.addInitialDPRequest(serviceKey, calledPartyNumber, null, null, null, null, null, null, null, null, null,
                     null, null, null, null, null, null, null, null, null, false, null, null, null, null, null, null, null,
