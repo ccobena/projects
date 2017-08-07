@@ -16,7 +16,7 @@ public class cc {
 			//crnt.testDecode();
 			
 			//401c413903c1cc
-			// cambio realizado por CC
+			//actualizado por CC
 			System.out.println(GregorianCalendar.getInstance().YEAR); 
 			System.out.println(Calendar.getInstance().MONTH);
 			System.out.println(Calendar.getInstance().DAY_OF_MONTH);
