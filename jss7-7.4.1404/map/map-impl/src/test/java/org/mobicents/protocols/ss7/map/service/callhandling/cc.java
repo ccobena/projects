@@ -1,5 +1,10 @@
 package org.mobicents.protocols.ss7.map.service.callhandling;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import org.mobicents.protocols.ss7.cap.api.primitives.TimeAndTimezone;
+
 public class cc {
 
 	public static void main(String[] args) {
@@ -11,14 +16,14 @@ public class cc {
 			//crnt.testDecode();
 			
 			//401c413903c1cc
-			byte b[] =  new byte[] { (byte)0x40, (byte)0x1c, (byte)0x41, (byte)0x39, (byte)0x03, (byte)0xC1, (byte)0xCC };
-			byte a[]= new byte[] {(byte)0, (byte)0};
-			for (int i=0;i<=a.length-1;i++){
-				System.out.println(a[i]);
-			}
-			for (int i=0;i<=b.length-1;i++){
-				System.out.println(b[i]);
-			}
+			System.out.println(GregorianCalendar.getInstance().YEAR); 
+			System.out.println(Calendar.getInstance().MONTH);
+			System.out.println(Calendar.getInstance().DAY_OF_MONTH);
+			System.out.println(Calendar.getInstance().HOUR_OF_DAY);
+			System.out.println(Calendar.getInstance().MINUTE);
+			System.out.println(Calendar.getInstance().SECOND);
+            
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}	
