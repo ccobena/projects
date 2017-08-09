@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<connectdelay value="10000"/>
-<servers/>
-<associations>
-	<name value="Ass_main"/>
-	<association name="Ass_main" assoctype="CLIENT" hostAddress="127.0.0.1" hostPort="9205" peerAddress="127.0.0.1" peerPort="8012" ipChannelType="1" extraHostAddresseSize="0"/>
-</associations>
