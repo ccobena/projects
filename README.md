@@ -1,0 +1,1 @@
+JSS7 project is an implementation of SS7 in Java and it´s managed as opensource.
