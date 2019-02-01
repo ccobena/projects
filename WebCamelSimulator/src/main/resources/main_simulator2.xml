@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configurationData>
+	<sccp routeOnGtMode="false" remoteSpc="9721" localSpc="9559" ni="2" remoteSsn="146" localSsn="146" localSsn2="0" translationType="0">
+		<globalTitleType value="Translation type, numbering plan, encoding scheme and NOA ind"/>
+		<addressNature value="INTERNATIONAL"/>
+		<numberingPlan value="ISDN_TELEPHONY"/>
+		<sccpProtocolVersion value="ITU"/>
+		<callingPartyAddressDigits value=""/>
+	</sccp>
+	<cap>
+		<remoteAddressDigits value=""/>
+	</cap>
+	<testCapSsf>
+		<capApplicationContext value="CAP_V2_gsmSSF_to_gsmSCF 0.50.1"/>
+	</testCapSsf>
+</configurationData>

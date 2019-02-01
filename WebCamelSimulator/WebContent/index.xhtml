@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+<h:head>
+
+</h:head>
+<h:body>
+    <h:form id="simulatorForm">
+    	<p:growl id="growl" life="2000" />	    
+		<p:panel id="panel" header="Simulator Data" style="margin-bottom:10px;">
+        	<h:panelGrid columns="2" cellpadding="5">
+	        	
+	            <h:outputLabel for="acrWaitTime" value="ACR Wait Time: " />
+	            <p:inputNumber id="acrWaitTime" value="#{webSimulator.acrWaitTime}" required="false" label="ACR Wait Time" emptyValue="200" decimalPlaces="0" thousandSeparator="">
+	            	<f:validateLongRange minimum="0" maximum="60000"  />
+	            </p:inputNumber>
+	            
+	            <h:outputLabel for="callDuration" value="Call Duration: *" />
+	            <p:inputNumber id="callDuration" value="#{webSimulator.callDuration}" required="true" requiredMessage="Call Duration is required" label="Call Duration" decimalPlaces="0" thousandSeparator="">
+	            	<f:validateLongRange minimum="1" maximum="86400"  />
+	            </p:inputNumber>
+	            
+	            <h:outputLabel for="profileName" value="Profile Name: " />
+	            <p:inputText id="profileName" value="#{webSimulator.appProfileName}" required="false" emptyValue="main" label="Profile Name" />
+	            
+	            <!-- onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" -->
+	                                 
+	       	</h:panelGrid>
+    	
+	    	<h:panelGrid columns="1" rows="3">
+	    		<p:commandButton value="Make Call"
+	    					 actionListener="#{webSimulator.makeCall}"
+	    					 oncomplete="jsStartTask(xhr, status, args)"
+	                         update="growl"
+	                         widgetVar="taskButton"
+	                         />
+	            <h:outputText id="taskResult" value="#{webSimulator.message}"/>
+	    		<p:progressBar  widgetVar="progressBar"
+	                        ajax="true"
+	                        interval="500"
+	                        value="#{webSimulator.actualProgress}"
+	                        labelTemplate="{value}%"
+	                        global="false"
+	                        style="width:500px">
+	
+	            	<p:ajax event="complete"
+	                    update="taskResult"
+	                    oncomplete="jsOnComplete()"/>
+	
+	        	</p:progressBar>       	
+	    	</h:panelGrid>
+    	</p:panel>
+    </h:form>
+
+    <script type="text/javascript">
+    function jsOnComplete() {
+        PF('taskButton').enable();
+    }
+
+    function jsStartTask(xhr, status, args) {
+    	if(args.validationFailed) {
+    		PF('taskButton').enable();            
+        } 
+        else {
+        	PF('taskButton').disable();
+        	PF('progressBar').cancel();
+            PF('progressBar').setValue(0);
+            PF('progressBar').start();
+        }
+    }    
+ </script>
+</h:body>
+</html>
