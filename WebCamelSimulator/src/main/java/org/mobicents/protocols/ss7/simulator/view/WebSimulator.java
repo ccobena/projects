@@ -41,6 +41,7 @@ public class WebSimulator implements NotificationListener {
 	private int actualProgress;
 	private boolean releaseCallReceived = false;
 	private boolean establishTemporaryConnectionReceived = false;
+	private boolean callCompleted = false;
 	private String appProfileName;
 	private int callDuration;
 	private int acrWaitTime;
@@ -48,17 +49,20 @@ public class WebSimulator implements NotificationListener {
 
 	public void makeCall(){
 		try{
+			// init variables
 			this.setActualProgress(0);
 			this.setMessage("");	
+			this.setCallCompleted(false);
 			this.setEstablishTemporaryConnectionReceived(false);
 			this.setReleaseCallReceived(false);
 			this.setupLog4j(this.getAppProfileName());
 			appConfigurationData = new AppConfigurationData(this.getAppProfileName());
 
+			// lookup for cap Provider and setup CamelData (IDP && ACR)
 			this.ssfCallMBeanImpl = new SsfCallMBeanImpl(appConfigurationData.getCamelConfigurationData(), this.getAppProfileName(), this.getCallDuration() * 10, this.getAcrWaitTime());
+		
 			this.ssfCallMBeanImpl.addNotificationListener(this, null, null);
 			this.ssfCallMBeanImpl.start();
-
 			CAPApplicationContext capAppContext = appConfigurationData.getSimulatorConfigurationData()
 			        .getTestCapSsfConfigurationData().getCapApplicationContext().getCAPApplicationContext();
 
@@ -174,24 +178,30 @@ public class WebSimulator implements NotificationListener {
         logger.debug("log4j configured");
     }
 
+    
     @Override
     public void handleNotification(Notification notification, Object handback) {
-    	int s = ssfCallMBeanImpl.getPercentCallDuration();
+    	int s = ssfCallMBeanImpl.getProgressCallDuration();
     	this.setActualProgress(s);
-    	System.out.println("setting progress to : " + s);
-    	if (this.getMessage().equals("")) this.setMessage("Call Completed Successfully");
+    	//System.out.println("setting progress to : " + s);
     	if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Apply Charging Received :") && !notification.getUserData().equals("")){
-        	//this.setActualProgress(Integer.valueOf(notification.getUserData().toString().split("%")[0]).intValue());
+        	// do nothing
+    		if (s >= 100 && !this.isCallCompleted()) {
+        		this.setCallCompleted(true);
+        		this.setMessage("Call Completed Successfully - Progress : " + this.getActualProgress() + "%");
+        	}        	
         }else if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Release Call Received :") && !notification.getUserData().equals("")){
         	this.setReleaseCallReceived(true);
-        	//this.setActualProgress(Integer.valueOf(notification.getUserData().toString().split("%")[0]).intValue());
-        	if (this.getMessage().equals("")) this.setMessage("RC message received from OCS");        	
-        	//this.setActualProgress(100);
+        	if (!this.isCallCompleted()) { 
+        		this.setMessage("RC message received from OCS - Progress : " + this.getActualProgress() + "%");
+        	}
+        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed 
         }else if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Establish Temporary Connection Received :") && !notification.getUserData().equals("")){
         	this.setEstablishTemporaryConnectionReceived(true);
-        	//this.setActualProgress(Integer.valueOf(notification.getUserData().toString().split("%")[0]).intValue());
-        	if (this.getMessage().equals("")) this.setMessage("ETC message received from OCS");
-        	//this.setActualProgress(100);
+        	if (!this.isCallCompleted()) {
+        		this.setMessage("ETC message received from OCS - Progress : " + this.getActualProgress() + "%");
+        	}
+        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed
         }
     }
 
@@ -208,30 +218,6 @@ public class WebSimulator implements NotificationListener {
 	}
 
 	public void setActualProgress(int actualProgress) {
-		/*if (actualProgress >=100 && !isReleaseCallReceived() && !isEstablishTemporaryConnectionReceived()) {
-			this.setMessage("Call Completed Successfully");
-			this.ssfCallMBeanImpl.stop();
-		}*/
-		/*System.out.println("going to set progress to : " + actualProgress);
-		if (actualProgress >= 100){
-			this.setMessage("Call Completed Successfully");
-			System.out.println("setted message Call Completed Succesfully");
-		}
-		if(isReleaseCallReceived()){
-			if (actualProgress < 100){
-				this.setMessage("RC Received From OCS - Progress Completed : " + actualProgress + "%");
-				System.out.println("setted message RC");
-				//actualProgress = 100;
-				
-			}
-		}
-		else if (isEstablishTemporaryConnectionReceived()){
-			if (actualProgress < 100){
-				this.setMessage("ETC Received From OCS - Progress Completed : " + actualProgress + "%");
-				System.out.println("setted message ETC");
-				//actualProgress = 100;
-			}	
-		}*/
 		this.actualProgress = actualProgress;
 	}
 
@@ -289,6 +275,14 @@ public class WebSimulator implements NotificationListener {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public boolean isCallCompleted() {
+		return callCompleted;
+	}
+
+	public void setCallCompleted(boolean callCompleted) {
+		this.callCompleted = callCompleted;
 	}
 
 	

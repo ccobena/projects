@@ -99,7 +99,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     private int maxCallDuration=0;
     private int currentCallDuration=0;
     private int maxCallPeriodDuration=0;
-    private int percentCallDuration=0;
+    private int progressCallDuration=0;
     private CamelConfigurationData camelConfigurationData = null;
     private long acrWaitTime = 0;
     private int countApplyChargingReport = 0;
@@ -360,11 +360,11 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onApplyChargingRequest(ApplyChargingRequest arg0) {
         this.setCountApplyCharging(this.getCountApplyCharging() + 1);
-        System.out.println("He recibido un ACR : " + this.getCountApplyCharging());
+        //System.out.println("He recibido un ACR : " + this.getCountApplyCharging());
     	
         String uData = "";
         try{
-            if (this.maxCallDuration > 0){// means automatic call (no GUI)
+            if (this.maxCallDuration > 0){
                 this.maxCallPeriodDuration = (int) arg0.getAChBillingChargingCharacteristics().getMaxCallPeriodDuration();
                 if (this.currentCallDuration <= this.maxCallDuration){
                 	if ( (this.currentCallDuration + this.maxCallPeriodDuration )> this.maxCallDuration ){
@@ -378,15 +378,15 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
                 }else{
                 //do nothing, Release call should have been received at this stage
                 }
-                double updatePercent = ((double)this.currentCallDuration/(double)this.maxCallDuration) * 100;
-                updatePercent = Math.floor(updatePercent);
+                double updateProgress = ((double)this.currentCallDuration/(double)this.maxCallDuration) * 100;
+                updateProgress = Math.floor(updateProgress);
                 uData = "";
-                System.out.println("UpdatePercent : " + updatePercent + " - Current Call Duration : " + this.currentCallDuration + " - Max Call Duration : " + this.maxCallDuration);
-                if (this.percentCallDuration < updatePercent){
-                    this.percentCallDuration = (int) updatePercent;
-                    uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+                System.out.println("UpdatePercent : " + updateProgress + " - Current Call Duration : " + this.currentCallDuration + " - Max Call Duration : " + this.maxCallDuration);
+                if (this.progressCallDuration < updateProgress){
+                    this.progressCallDuration = (int) updateProgress;
+                    uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
                 }
-                System.out.println("PercentCallDuration : " + this.percentCallDuration);
+                //System.out.println("ProgressCallDuration : " + this.progressCallDuration);
             }
             if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
             	this.cc.step = Step.answered;
@@ -416,7 +416,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     	this.closeCurrentDialog();
         this.cc = null;
     	this.setCountReleaseCall(this.getCountReleaseCall() + 1);
-    	String uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+    	String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
         this.sendNotif(SOURCE_NAME, "Release Call Received :", uData, Level.INFO);
         this.setCurrentCallDuration(0);
         this.setMaxCallDuration(0);
@@ -480,7 +480,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         this.setMaxCallDuration(0);
         this.setMaxCallPeriodDuration(0);
         this.closeCurrentDialog();
-        String uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
         this.sendNotif(SOURCE_NAME, "Establish Temporary Connection Received :", uData, Level.DEBUG);
 
     }
@@ -701,8 +701,8 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         this.maxCallPeriodDuration = maxCallPeriodDuration;
     }
 
-    public void setPercentCallDuration(int percentCallDuration) {
-        this.percentCallDuration = percentCallDuration;
+    public void setProgressCallDuration(int percentCallDuration) {
+        this.progressCallDuration = percentCallDuration;
     }
 
     public void setAcrWaitTime(long AcrWaitTime) {
@@ -721,8 +721,8 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         return this.maxCallPeriodDuration;
     }
 
-    public int getPercentCallDuration() {
-        return this.percentCallDuration;
+    public int getProgressCallDuration() {
+        return this.progressCallDuration;
     }
 
    public long getACRWaitTime() {
@@ -787,7 +787,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 	public void sendNotif(String source, String msg, String userData, Level logLevel) {
 
 	   this.doSendNotif(source, msg, userData);
-	   //logger.log(Level.INFO, msg + "\n" + userData);
+	   logger.log(Level.INFO, msg + "\n" + userData);
 	}
 
 	private synchronized void doSendNotif(String source, String msg, String userData) {
