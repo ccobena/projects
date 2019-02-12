@@ -181,7 +181,7 @@ public class WebSimulator implements NotificationListener {
     
     @Override
     public void handleNotification(Notification notification, Object handback) {
-    	int s = ssfCallMBeanImpl.getProgressCallDuration();
+    	int s = this.getSsfCallMBeanImpl().getProgressCallDuration();
     	this.setActualProgress(s);
     	//System.out.println("setting progress to : " + s);
     	if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Apply Charging Received :") && !notification.getUserData().equals("")){

@@ -96,12 +96,12 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     private CAPDialogCircuitSwitchedCall currentCapDialog;
     private CallContent cc;
 
-    private int maxCallDuration=0;
-    private int currentCallDuration=0;
-    private int maxCallPeriodDuration=0;
-    private int progressCallDuration=0;
+    private int maxCallDuration;
+    private int currentCallDuration;
+    private int maxCallPeriodDuration;
+    private int progressCallDuration;
     private CamelConfigurationData camelConfigurationData = null;
-    private long acrWaitTime = 0;
+    private long acrWaitTime;
     private int countApplyChargingReport = 0;
     private int countApplyCharging = 0;
     private int countReleaseCall = 0;
@@ -114,6 +114,9 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     	this.setCamelConfigurationData(camelConfigurationData);
     	this.setMaxCallDuration(callDuration);
     	this.setAcrWaitTime(acrWaitTime);
+    	this.setCurrentCallDuration(0);
+    	this.setProgressCallDuration(0);
+    	
 
     	Properties props = new Properties();
     	props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
@@ -369,7 +372,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
                 if (this.currentCallDuration <= this.maxCallDuration){
                 	if ( (this.currentCallDuration + this.maxCallPeriodDuration )> this.maxCallDuration ){
                         int lastCallPeriodDuration = this.maxCallDuration - this.currentCallDuration;
-                        this.maxCallPeriodDuration = lastCallPeriodDuration;
+                        this.setMaxCallPeriodDuration(lastCallPeriodDuration);
                     }
                     this.currentCallDuration = this.currentCallDuration + this.maxCallPeriodDuration;
                     if (this.acrWaitTime > 0)
@@ -413,20 +416,22 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onReleaseCallRequest(ReleaseCallRequest ind) {
 
-    	this.closeCurrentDialog();
-        this.cc = null;
+    	this.closeCurrentDialog(ind.getCAPDialog());
+    	this.cc = null;
     	this.setCountReleaseCall(this.getCountReleaseCall() + 1);
     	String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
         this.sendNotif(SOURCE_NAME, "Release Call Received :", uData, Level.INFO);
         this.setCurrentCallDuration(0);
         this.setMaxCallDuration(0);
-        this.setMaxCallPeriodDuration(0);        
+        this.setMaxCallPeriodDuration(0);
+        //this.setProgressCallDuration(0);        
+                 
     }
 
     @Override
-	public String closeCurrentDialog() {
+	public String closeCurrentDialog(CAPDialogCircuitSwitchedCall curDialog) {
 
-        CAPDialogCircuitSwitchedCall curDialog = currentCapDialog;
+        //CAPDialogCircuitSwitchedCall curDialog = currentCapDialog;
         if (curDialog != null) {
             try {
                 if (curDialog.getState() == CAPDialogState.Active)
@@ -476,13 +481,13 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onEstablishTemporaryConnectionRequest(EstablishTemporaryConnectionRequest ind) {
         // TODO Auto-generated method stub
+        this.closeCurrentDialog(ind.getCAPDialog());
+        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+        this.sendNotif(SOURCE_NAME, "Establish Temporary Connection Received :", uData, Level.DEBUG);
         this.setCurrentCallDuration(0);
         this.setMaxCallDuration(0);
         this.setMaxCallPeriodDuration(0);
-        this.closeCurrentDialog();
-        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
-        this.sendNotif(SOURCE_NAME, "Establish Temporary Connection Received :", uData, Level.DEBUG);
-
+        
     }
 
     @Override
