@@ -50,5 +50,7 @@ public interface TestCapSsfManMBean {
     String performApplyChargingReport(String msg);
 
     String performEventReportBCSM(String msg);
+    
+    String performReleaseCall(String msg);
 
 }

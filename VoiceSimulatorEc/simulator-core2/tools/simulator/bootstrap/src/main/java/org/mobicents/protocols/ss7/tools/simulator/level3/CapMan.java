@@ -74,7 +74,7 @@ public class CapMan implements CapManMBean, Stoppable {
     // @Override
     // public void setRemoteSsn(int val) {
     // this.testerHost.getConfigurationData().getCapConfigurationData().setRemoteSsn(val);
-    // this.testerHost.markStore();
+    // this.testerHost.setNeedStore(true);
     // }
     //
     // @Override
@@ -85,7 +85,7 @@ public class CapMan implements CapManMBean, Stoppable {
     // @Override
     // public void setLocalSsn(int val) {
     // this.testerHost.getConfigurationData().getCapConfigurationData().setLocalSsn(val);
-    // this.testerHost.markStore();
+    // this.testerHost.setNeedStore(true);
     // }
 
     @Override
@@ -96,7 +96,7 @@ public class CapMan implements CapManMBean, Stoppable {
     @Override
     public void setRemoteAddressDigits(String val) {
         this.testerHost.getConfigurationData().getCapConfigurationData().setRemoteAddressDigits(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override

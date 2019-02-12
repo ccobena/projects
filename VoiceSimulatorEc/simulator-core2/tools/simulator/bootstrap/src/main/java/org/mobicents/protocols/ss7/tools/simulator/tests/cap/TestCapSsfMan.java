@@ -37,6 +37,7 @@ import org.mobicents.protocols.ss7.cap.api.dialog.CAPGprsReferenceNumber;
 import org.mobicents.protocols.ss7.cap.api.dialog.CAPNoticeProblemDiagnostic;
 import org.mobicents.protocols.ss7.cap.api.dialog.CAPUserAbortReason;
 import org.mobicents.protocols.ss7.cap.api.errors.CAPErrorMessage;
+import org.mobicents.protocols.ss7.cap.api.isup.CauseCap;
 import org.mobicents.protocols.ss7.cap.api.isup.Digits;
 import org.mobicents.protocols.ss7.cap.api.primitives.EventTypeBCSM;
 import org.mobicents.protocols.ss7.cap.api.primitives.TimeAndTimezone;
@@ -79,6 +80,7 @@ import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.Specializ
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.IPSSPCapabilities;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.TimeDurationChargingResult;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.TimeInformation;
+import org.mobicents.protocols.ss7.isup.message.parameter.CauseIndicators;
 import org.mobicents.protocols.ss7.isup.message.parameter.GenericDigits;
 import org.mobicents.protocols.ss7.isup.message.parameter.GenericNumber;
 import org.mobicents.protocols.ss7.tcap.asn.comp.PAbortCauseType;
@@ -129,7 +131,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
     private int maxCallDuration=0;
     private int currentCallDuration=0;
     private int maxCallPeriodDuration=0;
-    private int percentCallDuration=0;
+    private int progressCallDuration=0;
     private CamelConfigurationData camelConfigurationData = null;
     private long acrWaitTime = 0;
 
@@ -164,8 +166,8 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         this.maxCallPeriodDuration = maxCallPeriodDuration;
     }
 
-    public void setPercentCallDuration(int percentCallDuration) {
-        this.percentCallDuration = percentCallDuration;
+    public void setProgressCallDuration(int progressCallDuration) {
+        this.progressCallDuration = progressCallDuration;
     }
 
     public void setCamelConfigurationData(CamelConfigurationData camelConfigurationData) {
@@ -188,8 +190,8 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         return this.maxCallPeriodDuration;
     }
 
-    public int getPercentCallDuration() {
-        return this.percentCallDuration;
+    public int getProgressCallDuration() {
+        return this.progressCallDuration;
     }
 
     public CamelConfigurationData getCamelConfigurationData() {
@@ -212,7 +214,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
     @Override
     public void setCapApplicationContext(CapApplicationContextSsf val) {
         this.testerHost.getConfigurationData().getTestCapSsfConfigurationData().setCapApplicationContext(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -585,34 +587,78 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         this.countApplyCharging++;
         currentRequestDef += "Rsvd applyCharging;";//AC received
         String uData = "";
+        boolean mustSendReleaseCall = false; 
         try{
             if (this.maxCallDuration > 0){// means automatic call (no GUI)
                 this.maxCallPeriodDuration = (int) arg0.getAChBillingChargingCharacteristics().getMaxCallPeriodDuration();
-                if (this.currentCallDuration <= this.maxCallDuration){
+                if (this.currentCallDuration < this.maxCallDuration){
                     if ( (this.currentCallDuration + this.maxCallPeriodDuration )> this.maxCallDuration ){
                         int lastCallPeriodDuration = this.maxCallDuration - this.currentCallDuration;
                         this.maxCallPeriodDuration = lastCallPeriodDuration;
+                        mustSendReleaseCall = true;
                     }
                     this.currentCallDuration = this.currentCallDuration + this.maxCallPeriodDuration;
                     if (this.acrWaitTime > 0)
                         Thread.sleep(this.acrWaitTime);
-                    this.performApplyChargingReport("");
+                    this.performApplyChargingReport("");                    
                 }else{
                 //do nothing, Release call should have been received at this stage
+                	mustSendReleaseCall = true;                	
                 }
                 double updatePercent = ((double)this.currentCallDuration/(double)this.maxCallDuration) * 100;
                 updatePercent = Math.floor(updatePercent);
                 uData = "";
-                if (this.percentCallDuration < updatePercent){
-                    this.percentCallDuration = (int) updatePercent;
-                    uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+                if (this.progressCallDuration < updatePercent){
+                    this.progressCallDuration = (int) updatePercent;
+                    uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
                 }
             }
             this.testerHost.sendNotif(SOURCE_NAME, "Received: applyCharging", uData, Level.DEBUG);
+            if (mustSendReleaseCall)
+            	this.performReleaseCall("");
         }catch(InterruptedException e){
             this.testerHost.sendNotif(SOURCE_NAME, "Exception when applying acrWaitTime", e.toString(), Level.DEBUG);
         }
     }
+    
+    @Override
+    public String performReleaseCall(String msg) {
+        if (!isStarted)
+            return "The tester is not started";
+        CAPDialogCircuitSwitchedCall curDialog = currentDialog;
+        if (curDialog == null)
+            return "The current dialog does not exist. Start it previousely or wait of starting by a peer";
+
+        CAPProvider capProvider = this.capMan.getCAPStack().getCAPProvider();
+
+        try {
+            CauseIndicators causeIndicators = capProvider.getISUPParameterFactory().createCauseIndicators();
+            causeIndicators.setCauseValue(CauseIndicators._CV_ALL_CLEAR);
+            causeIndicators.setCodingStandard(CauseIndicators._CODING_STANDARD_ITUT);
+            causeIndicators.setLocation(CauseIndicators._LOCATION_PRIVATE_NSLU);
+            causeIndicators.setRecommendation(0);
+            CauseCap cause = capProvider.getCAPParameterFactory().createCauseCap(causeIndicators);
+            curDialog.addReleaseCallRequest(cause);
+
+            curDialog.send();
+
+            currentRequestDef += "Sent releaseCall;";
+            this.countReleaseCall++;
+            String uData = "";
+            this.setCurrentCallDuration(0);
+            //this.setMaxCallDuration(0);
+            this.setMaxCallPeriodDuration(0);
+            this.closeCurrentDialog();
+            this.testerHost.sendNotif(SOURCE_NAME, "Sent: releaseCall", uData, Level.DEBUG);
+
+            return "ReleaseCall has been sent";
+        } catch (CAPException ex) {
+            this.testerHost.sendNotif(SOURCE_NAME, "Exception when sending releaseCall", ex.toString(), Level.DEBUG);
+            return "Exception when sending releaseCall: " + ex.toString();
+        }
+    }
+
+    
     @Override
     public void onAssistRequestInstructionsRequest(AssistRequestInstructionsRequest arg0) {
         // TODO Auto-generated method stub
@@ -669,7 +715,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         this.setMaxCallDuration(0);
         this.setMaxCallPeriodDuration(0);
         this.closeCurrentDialog();
-        String uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
         this.testerHost.sendNotif(SOURCE_NAME, "Received: establishTemporaryConnection", uData, Level.DEBUG);
 
     }
@@ -742,7 +788,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         this.setMaxCallDuration(0);
         this.setMaxCallPeriodDuration(0);
         this.closeCurrentDialog();
-        String uData = this.percentCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
         this.testerHost.sendNotif(SOURCE_NAME, "Received: releaseCall", uData, Level.DEBUG);
 
     }
@@ -916,5 +962,7 @@ public class TestCapSsfMan extends TesterBase implements TestCapSsfManMBean, Sto
         // TODO Auto-generated method stub
 
     }
+    
+    
 
 }

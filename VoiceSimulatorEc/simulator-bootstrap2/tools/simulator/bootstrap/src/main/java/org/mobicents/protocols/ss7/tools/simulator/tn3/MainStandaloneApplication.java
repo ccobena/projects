@@ -234,7 +234,7 @@ public class MainStandaloneApplication {
 	        	    int callDurationInput  = keyboard.getInt("Enter call duration (seconds) :");
 	        	    this.inputParametersMap.put("callDuration", callDurationInput * 10);
 	        	    //this.callDuration  = callDurationInput * 10;
-	        	    simulator.openTest(this.inputParametersMap, this.camelConfigurationData);
+	        	    simulator.makeCall(this.inputParametersMap, this.camelConfigurationData);
 	        	    boolean callCompleted = false;
 	        	    while (!callCompleted){
 	        	    	Thread.sleep(200);

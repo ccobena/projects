@@ -150,3 +150,579 @@ java.lang.NullPointerException
 	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
 	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
 	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:07:57,271]DEBUG  5621[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:07:57,271]DEBUG  5621[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:07:57,412] INFO  5762[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-07 20:07:57,412] INFO  5762[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-07 20:07:57,443] INFO  5793[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-07 20:07:57,443] INFO  5793[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-07 20:07:57,443] INFO  5793[Thread-1] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-07 20:07:57,443] INFO  5793[Thread-1] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-07 20:07:57,459] INFO  5809[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-07 20:07:57,459] INFO  5809[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-07 20:07:57,459] INFO  5809[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-07 20:07:57,459] INFO  5809[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-07 20:07:57,990] INFO  6340[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-07 20:07:57,990] INFO  6340[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-07 20:07:57,990] INFO  6340[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-07 20:07:57,990] INFO  6340[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-07 20:07:57,990]ERROR  6340[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:07:57,990]ERROR  6340[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:07:58,005] INFO  6355[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-07 20:07:58,005] INFO  6355[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-07 20:07:58,005]ERROR  6355[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:07:58,005]ERROR  6355[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:08:24,496]DEBUG  2917[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:08:24,496]DEBUG  2917[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:13:48,738]DEBUG  8720[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:13:48,738]DEBUG  8720[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:16:51,857]DEBUG  2813[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:16:51,857]DEBUG  2813[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:17:48,632] WARN 59588[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:17:48,632] WARN 59588[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:19:27,582] INFO158538[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-07 20:19:27,582] INFO158538[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-07 20:19:27,598] INFO158554[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-07 20:19:27,598] INFO158554[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-07 20:19:27,598] INFO158554[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-07 20:19:28,114] INFO159070[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-07 20:19:28,114] INFO159070[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-07 20:19:28,114] INFO159070[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-07 20:19:28,114] INFO159070[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-07 20:19:28,114]ERROR159070[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:19:28,114]ERROR159070[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:19:28,129] INFO159085[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-07 20:19:28,129] INFO159085[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-07 20:19:28,129]ERROR159085[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:19:28,129]ERROR159085[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-07 20:19:56,519]DEBUG  2636[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:19:56,519]DEBUG  2636[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:21:21,933]DEBUG  2651[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-07 20:21:21,933]DEBUG  2651[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:49:12,169]DEBUG 11319[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:49:12,169]DEBUG 11319[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:54:17,051] WARN316201[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:17,051] WARN316201[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:42,306] INFO341456[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:54:42,306] INFO341456[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:54:42,322] INFO341472[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:54:42,322] INFO341472[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:54:42,322] INFO341472[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:54:42,322] INFO341472[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:54:42,337] INFO341487[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:54:42,337] INFO341487[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:54:42,337] INFO341487[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:54:42,337] INFO341487[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:54:42,853] INFO342003[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:54:42,853] INFO342003[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:54:42,853] INFO342003[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:54:42,853] INFO342003[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:54:42,868]ERROR342018[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:42,868]ERROR342018[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:42,868] INFO342018[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:54:42,868] INFO342018[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:54:42,884]ERROR342034[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:42,884]ERROR342034[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:54:59,894]DEBUG  3353[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:54:59,894]DEBUG  3353[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:57:12,124] WARN135583[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:12,124] WARN135583[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:26,846] INFO150305[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:57:26,846] INFO150305[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:57:26,861] INFO150320[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:57:26,861] INFO150320[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:57:26,861] INFO150320[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:57:26,861] INFO150320[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:57:26,877] INFO150336[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:57:26,877] INFO150336[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:57:26,877] INFO150336[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:57:26,877] INFO150336[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:57:27,393] INFO150852[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:57:27,393] INFO150852[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:57:27,393] INFO150852[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:57:27,393] INFO150852[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:57:27,393]ERROR150852[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:27,393]ERROR150852[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:27,408] INFO150867[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:57:27,408] INFO150867[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:57:27,408]ERROR150867[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:27,408]ERROR150867[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:43,601]DEBUG  3363[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:57:43,601]DEBUG  3363[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:57:59,522] WARN 19284[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:59,522] WARN 19284[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:629)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:57:59,647] INFO 19409[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:57:59,647] INFO 19409[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-08 13:57:59,663] INFO 19425[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:57:59,663] INFO 19425[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-08 13:57:59,663] INFO 19425[Thread-1] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:57:59,663] INFO 19425[Thread-1] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-08 13:57:59,663] INFO 19425[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:57:59,663] INFO 19425[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-08 13:57:59,679] INFO 19441[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:57:59,679] INFO 19441[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-08 13:58:00,179]ERROR 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:58:00,179]ERROR 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:352)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:58:00,179] INFO 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:220) - Layer 1 has not started
+
+[2019-02-08 13:58:00,179]ERROR 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:58:00,179]ERROR 19941[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:481)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:363)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:201)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:168)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 13:58:21,115]DEBUG  5320[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 13:58:21,115]DEBUG  5320[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 14:00:25,994]DEBUG 28902[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 14:00:25,994]DEBUG 28902[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 14:16:24,542]DEBUG 13122[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 14:16:24,542]DEBUG 13122[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 16:23:06,746]DEBUG  5820[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 16:23:06,746]DEBUG  5820[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:196) - log4j configured
+[2019-02-08 16:30:37,720] WARN456794[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+javolution.xml.stream.XMLStreamException: Incomplete element reading (at line 8, column 24)
+	at javolution.xml.XMLFormat$InputElement.readInstanceOf(XMLFormat.java:469)
+	at javolution.xml.XMLFormat$InputElement.get(XMLFormat.java:410)
+	at javolution.xml.XMLObjectReader.read(XMLObjectReader.java:277)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:628)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-08 16:30:37,720] WARN456794[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:209) - Error while reading the Host state from file
+javolution.xml.stream.XMLStreamException: Incomplete element reading (at line 8, column 24)
+	at javolution.xml.XMLFormat$InputElement.readInstanceOf(XMLFormat.java:469)
+	at javolution.xml.XMLFormat$InputElement.get(XMLFormat.java:410)
+	at javolution.xml.XMLObjectReader.read(XMLObjectReader.java:277)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.loadOld(TesterHost.java:628)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.<init>(TesterHost.java:143)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-10 12:42:25,505]DEBUG  4228[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:42:25,505]DEBUG  4228[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:44:23,073]DEBUG 11084[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:44:23,073]DEBUG 11084[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:44:28,984] INFO 16995[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-10 12:44:28,984] INFO 16995[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-10 12:44:35,937] INFO 23948[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-10 12:44:35,937] INFO 23948[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-10 12:44:35,937] INFO 23948[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-10 12:44:35,937] INFO 23948[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-10 12:44:35,953] INFO 23964[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-10 12:44:35,953] INFO 23964[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-10 12:44:35,953] INFO 23964[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-10 12:44:35,953] INFO 23964[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-10 12:44:36,468] INFO 24479[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-10 12:44:36,468] INFO 24479[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-10 12:44:36,468] INFO 24479[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-10 12:44:36,468] INFO 24479[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-10 12:44:36,484]ERROR 24495[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:190) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:328)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:197)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-10 12:44:36,484]ERROR 24495[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:190) - Exception when starting M3uaMan
+java.lang.UnsupportedOperationException: SCTP not supported on this platform
+	at sun.nio.ch.SctpServerChannelImpl.<init>(SctpServerChannelImpl.java:45)
+	at com.sun.nio.sctp.SctpServerChannel.open(SctpServerChannel.java:101)
+	at org.mobicents.protocols.sctp.ServerImpl.doInitSocketSctp(ServerImpl.java:178)
+	at org.mobicents.protocols.sctp.ServerImpl.initSocket(ServerImpl.java:157)
+	at org.mobicents.protocols.sctp.ServerImpl.start(ServerImpl.java:112)
+	at org.mobicents.protocols.sctp.ManagementImpl.startServer(ManagementImpl.java:666)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.initM3ua(M3uaMan.java:742)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.start(M3uaMan.java:596)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:328)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:197)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-10 12:44:36,484] INFO 24495[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:196) - Layer 1 has not started
+
+[2019-02-10 12:44:36,484] INFO 24495[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:196) - Layer 1 has not started
+
+[2019-02-10 12:44:36,500]ERROR 24511[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:190) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:457)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:339)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:197)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-10 12:44:36,500]ERROR 24511[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.sendNotif(TesterHost.java:190) - Exception when stopping M3uaMan
+java.lang.NullPointerException
+	at org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl.stop(M3UAManagementImpl.java:297)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stopM3ua(M3uaMan.java:834)
+	at org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan.stop(M3uaMan.java:618)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.stop(TesterHost.java:457)
+	at org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.start(TesterHost.java:339)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startHost(Simulator.java:197)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.Simulator.startLocal(Simulator.java:165)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.menu(MainStandaloneApplication.java:202)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.boot(MainStandaloneApplication.java:179)
+	at org.mobicents.protocols.ss7.tools.simulator.tn3.MainStandaloneApplication.main(MainStandaloneApplication.java:69)
+[2019-02-10 12:45:21,008]DEBUG  3564[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:45:21,008]DEBUG  3564[main] - org.mobicents.protocols.ss7.tools.simulator.management.TesterHost.setupLog4j(TesterHost.java:177) - log4j configured
+[2019-02-10 12:46:11,499] INFO 54055[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-10 12:46:11,499] INFO 54055[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:292) - SCTP configuration file path C:\Users\cobench\git\jss7\VoiceSimulatorEc\SimSCTPServer_main_sctp.xml
+[2019-02-10 12:46:11,515] INFO 54071[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-10 12:46:11,515] INFO 54071[Thread-2] - org.mobicents.protocols.sctp.SelectorThread.run(SelectorThread.java:92) - SelectorThread for Management=SimSCTPServer_main started.
+[2019-02-10 12:46:11,515] INFO 54071[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-10 12:46:11,515] INFO 54071[main] - org.mobicents.protocols.sctp.ManagementImpl.start(ManagementImpl.java:315) - Started SCTP Management=SimSCTPServer_main WorkerThreads=8 SingleThread=false
+[2019-02-10 12:46:15,749] INFO 58305[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-10 12:46:15,749] INFO 58305[main] - org.mobicents.protocols.sctp.ManagementImpl.removeAllResourses(ManagementImpl.java:492) - Removing allocated resources: Servers=1, Associations=1
+[2019-02-10 12:46:15,765] INFO 58321[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-10 12:46:15,765] INFO 58321[main] - org.mobicents.protocols.sctp.ServerImpl.stop(ServerImpl.java:150) - Stoped Server=Server_main
+[2019-02-10 12:46:30,427] INFO 72983[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-10 12:46:30,427] INFO 72983[main] - org.mobicents.protocols.sctp.ManagementImpl.addServer(ManagementImpl.java:591) - Created Server=Server_main
+[2019-02-10 12:46:31,302] INFO 73858[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER
+[2019-02-10 12:46:31,302] INFO 73858[main] - org.mobicents.protocols.sctp.ManagementImpl.addServerAssociation(ManagementImpl.java:782) - Added Associoation=ServerAss_main of type=SERVER

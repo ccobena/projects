@@ -96,7 +96,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpLocalHost(String val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setLocalHost(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpLocalHost2(String val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setLocalHost2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpLocalPort(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setLocalPort(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpLocalPort2(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setLocalPort2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpRemoteHost(String val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setRemoteHost(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpRemoteHost2(String val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setRemoteHost2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpRemotePort(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setRemotePort(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpRemotePort2(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setRemotePort2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpExtraHostAddresses(String val) {
         this.doSetExtraHostAddresses(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     public void doSetExtraHostAddresses(String val) {
@@ -199,7 +199,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setSctpIsServer(boolean val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setIsSctpServer(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -210,7 +210,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setStorePcapTrace(boolean val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setStorePcapTrace(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setIpChannelType(IpChannelType.TCP);
         else
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setIpChannelType(IpChannelType.SCTP);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -254,7 +254,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaFunctionality(Functionality.AS);
         else
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaFunctionality(Functionality.SGW);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -277,7 +277,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaIPSPType(IPSPType.CLIENT);
         else
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaIPSPType(IPSPType.SERVER);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -316,7 +316,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setRoutingLabelFormat(RoutingLabelFormat.Japan_NTT);
         else
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setRoutingLabelFormat(RoutingLabelFormat.China);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -339,7 +339,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaExchangeType(ExchangeType.SE);
         else
             this.testerHost.getConfigurationData().getM3uaConfigurationData().setM3uaExchangeType(ExchangeType.DE);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -355,7 +355,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaDpc(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setDpc(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -366,7 +366,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaDpc2(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setDpc2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -377,7 +377,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaOpc(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setOpc(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -388,7 +388,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaOpc2(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setOpc2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -399,7 +399,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaSi(int val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setSi(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -410,7 +410,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaRoutingContext(long val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setRoutingContext(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -421,7 +421,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaNetworkAppearance(long val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setNetworkAppearance(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -438,7 +438,7 @@ public class M3uaMan implements M3uaManMBean, Stoppable {
     @Override
     public void setM3uaTrafficModeType(M3uaTrafficModeType val) {
         this.testerHost.getConfigurationData().getM3uaConfigurationData().setTrafficModeType(val.intValue());
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override

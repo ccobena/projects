@@ -94,7 +94,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setRouteOnGtMode(boolean val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setRouteOnGtMode(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setRemoteSpc(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setRemoteSpc(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setLocalSpc(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setLocalSpc(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setNi(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setNi(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setRemoteSsn(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setRemoteSsn(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setLocalSsn(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setLocalSsn(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setLocalSsn2(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setLocalSsn2(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setGlobalTitleType(GlobalTitleType val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setGlobalTitleType(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     public void setNatureOfAddress(NatureOfAddressType val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData()
                 .setNatureOfAddress(NatureOfAddress.valueOf(val.intValue()));
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -212,7 +212,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     public void setNumberingPlan(NumberingPlanSccpType val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData()
                 .setNumberingPlan(NumberingPlan.valueOf(val.intValue()));
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setSccpProtocolVersion(SccpProtocolVersionType val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setSccpProtocolVersion(SccpProtocolVersion.valueOf(val.intValue()));
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setTranslationType(int val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setTranslationType(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override
@@ -250,7 +250,7 @@ public class SccpMan implements SccpManMBean, Stoppable {
     @Override
     public void setCallingPartyAddressDigits(String val) {
         this.testerHost.getConfigurationData().getSccpConfigurationData().setCallingPartyAddressDigits(val);
-        this.testerHost.markStore();
+        this.testerHost.setNeedStore(true);
     }
 
     @Override

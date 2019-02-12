@@ -277,7 +277,7 @@ public class MainCore {
             if (host.isNeedQuit())
                 break;
 
-            host.checkStore();
+            //host.checkStore();
             host.execute();
         }
         System.out.println("Terminating...");

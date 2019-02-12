@@ -39,11 +39,7 @@ import org.mobicents.protocols.ss7.mtp.Mtp3UserPart;
 import org.mobicents.protocols.ss7.sccp.SccpStack;
 import org.mobicents.protocols.ss7.tools.simulator.Stoppable;
 import org.mobicents.protocols.ss7.tools.simulator.common.ConfigurationData;
-import org.mobicents.protocols.ss7.tools.simulator.level1.M3uaConfigurationData_OldFormat;
 import org.mobicents.protocols.ss7.tools.simulator.level1.M3uaMan;
-import org.mobicents.protocols.ss7.tools.simulator.level2.NatureOfAddressType;
-import org.mobicents.protocols.ss7.tools.simulator.level2.NumberingPlanSccpType;
-import org.mobicents.protocols.ss7.tools.simulator.level2.SccpConfigurationData_OldFormat;
 import org.mobicents.protocols.ss7.tools.simulator.level2.SccpMan;
 import org.mobicents.protocols.ss7.tools.simulator.level3.CapMan;
 import org.mobicents.protocols.ss7.tools.simulator.tests.cap.TestCapSsfMan;
@@ -68,8 +64,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
 
     private static final String CLASS_ATTRIBUTE = "type";
     private static final String TAB_INDENT = "\t";
-    private static final String PERSIST_FILE_NAME_OLD = "simulator.xml";
-    private static final String PERSIST_FILE_NAME = "simulator2.xml";
+    private static final String PERSIST_FILE_NAME = "simulator.xml";
     private static final String CONFIGURATION_DATA = "configurationData";
 
     public static String SIMULATOR_HOME_VAR = "SIMULATOR_HOME";
@@ -123,31 +118,18 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
         binding.setClassAttribute(CLASS_ATTRIBUTE);
 
         this.persistFile.clear();
-        TextBuilder persistFileOld = new TextBuilder();
-
+        
         if (persistDir != null) {
-            persistFileOld.append(persistDir).append(File.separator).append(this.appName).append("_")
-                    .append(PERSIST_FILE_NAME_OLD);
-            this.persistFile.append(persistDir).append(File.separator).append(this.appName).append("_")
+        	this.persistFile.append(persistDir).append(File.separator).append(this.appName).append("_")
                     .append(PERSIST_FILE_NAME);
         } else {
-            persistFileOld.append(System.getProperty(TESTER_HOST_PERSIST_DIR_KEY, System.getProperty(USER_DIR_KEY)))
-                    .append(File.separator).append(this.appName).append("_").append(PERSIST_FILE_NAME_OLD);
             this.persistFile.append(System.getProperty(TESTER_HOST_PERSIST_DIR_KEY, System.getProperty(USER_DIR_KEY)))
                     .append(File.separator).append(this.appName).append("_").append(PERSIST_FILE_NAME);
         }
 
-        File fnOld = new File(persistFileOld.toString());
         File fn = new File(persistFile.toString());
-
-        if (this.loadOld(fnOld)) {
-            this.store();
-        } else {
-            this.load(fn);
-        }
-        if (fnOld.exists())
-            fnOld.delete();
-
+        this.load(fn);        
+        
     }
 
     public ConfigurationData getConfigurationData() {
@@ -171,7 +153,6 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     }
 
     private void setupLog4j(String appName) {
-
         // InputStream inStreamLog4j = getClass().getResourceAsStream("/log4j.properties");
 
         String propFileName = appName + ".log4j.properties";
@@ -206,12 +187,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
         }
         this.doSendNotif(source, msg + " - " + e.toString(), sb.toString());
 
-        logger.log(logLevel, msg, e);
-        // if (showInConsole) {
-        // logger.error(msg, e);
-        // } else {
-        // logger.debug(msg, e);
-        // }
+        logger.log(logLevel, msg, e);        
     }
 
     public void sendNotif(String source, String msg, String userData, Level logLevel) {
@@ -244,7 +220,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void setInstance_L1(Instance_L1 val) {
         configurationData.setInstance_L1(val);
-        this.markStore();
+        //this.markStore();
     }
 
     @Override
@@ -255,7 +231,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void setInstance_L2(Instance_L2 val) {
         configurationData.setInstance_L2(val);
-        this.markStore();
+        this.setNeedStore(true);
     }
 
     @Override
@@ -266,7 +242,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void setInstance_L3(Instance_L3 val) {
         configurationData.setInstance_L3(val);
-        this.markStore();
+        this.setNeedStore(true);
     }
 
     @Override
@@ -277,7 +253,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void setInstance_TestTask(Instance_TestTask val) {
         configurationData.setInstance_TestTask(val);
-        this.markStore();
+        this.setNeedStore(true);
     }
 
     @Override
@@ -340,7 +316,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void start() {
 
-        this.store();
+        //this.store();
         this.stop();
 
         // L1
@@ -502,7 +478,7 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
     @Override
     public void quit() {
         this.stop();
-        this.store();
+        //this.store();
         this.needQuit = true;
     }
 
@@ -550,33 +526,6 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
         return this.configureStackFromFile;
     }
 
-    public void markStore() {
-        needStore = true;
-    }
-
-    public void checkStore() {
-        if (needStore) {
-            needStore = false;
-            this.store();
-        }
-    }
-
-    public synchronized void store() {
-
-        try {
-            XMLObjectWriter writer = XMLObjectWriter.newInstance(new FileOutputStream(persistFile.toString()));
-            writer.setBinding(binding);
-            // writer.setReferenceResolver(new XMLReferenceResolver());
-            writer.setIndentation(TAB_INDENT);
-
-            writer.write(this.configurationData, CONFIGURATION_DATA, ConfigurationData.class);
-
-            writer.close();
-        } catch (Exception e) {
-            this.sendNotif(SOURCE_NAME, "Error while persisting the Host state in file", e, Level.ERROR);
-        }
-    }
-
     private boolean load(File fn) {
 
         XMLObjectReader reader = null;
@@ -588,13 +537,9 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
             }
 
             reader = XMLObjectReader.newInstance(new FileInputStream(fn));
-
             reader.setBinding(binding);
-
             this.configurationData = reader.read(CONFIGURATION_DATA, ConfigurationData.class);
-
             reader.close();
-
             return true;
 
         } catch (Exception ex) {
@@ -603,66 +548,37 @@ public class TesterHost extends NotificationBroadcasterSupport implements Tester
         }
     }
 
-    private boolean loadOld(File fn) {
+	public boolean isNeedStore() {
+		return needStore;
+	}
 
-        XMLObjectReader reader = null;
+	public void setNeedStore(boolean needStore) {
+		this.needStore = needStore;
+	}
+
+/*
+
+    public void checkStore() {
+        if (needStore) {
+            needStore = false;
+            this.store();
+        }
+    }
+    
+
+    public synchronized void store() {
+
         try {
-            if (!fn.exists()) {
-                // this.sendNotif(SOURCE_NAME, "Error while reading the Host state from file: file not found: " + persistFile,
-                // "", Level.WARN);
-                return false;
-            }
-
-            reader = XMLObjectReader.newInstance(new FileInputStream(fn));
-
-            reader.setBinding(binding);
-            this.configurationData.setInstance_L1(Instance_L1.createInstance(reader.read(ConfigurationData.INSTANCE_L1,
-                    String.class)));
-            this.configurationData.setInstance_L2(Instance_L2.createInstance(reader.read(ConfigurationData.INSTANCE_L2,
-                    String.class)));
-            this.configurationData.setInstance_L3(Instance_L3.createInstance(reader.read(ConfigurationData.INSTANCE_L3,
-                    String.class)));
-            this.configurationData.setInstance_TestTask(Instance_TestTask.createInstance(reader.read(
-                    ConfigurationData.INSTANCE_TESTTASK, String.class)));
-
-            M3uaConfigurationData_OldFormat _m3ua = reader.read(ConfigurationData.M3UA, M3uaConfigurationData_OldFormat.class);
-            this.m3ua.setSctpLocalHost(_m3ua.getLocalHost());
-            this.m3ua.setSctpLocalPort(_m3ua.getLocalPort());
-            this.m3ua.setSctpRemoteHost(_m3ua.getRemoteHost());
-            this.m3ua.setSctpRemotePort(_m3ua.getRemotePort());
-            this.configurationData.getM3uaConfigurationData().setIpChannelType(_m3ua.getIpChannelType());
-            this.m3ua.setSctpIsServer(_m3ua.getIsSctpServer());
-            this.m3ua.doSetExtraHostAddresses(_m3ua.getSctpExtraHostAddresses());
-            this.configurationData.getM3uaConfigurationData().setM3uaFunctionality(_m3ua.getM3uaFunctionality());
-            this.configurationData.getM3uaConfigurationData().setM3uaIPSPType(_m3ua.getM3uaIPSPType());
-            this.configurationData.getM3uaConfigurationData().setM3uaExchangeType(_m3ua.getM3uaExchangeType());
-            this.m3ua.setM3uaDpc(_m3ua.getDpc());
-            this.m3ua.setM3uaOpc(_m3ua.getOpc());
-            this.m3ua.setM3uaSi(_m3ua.getSi());
-
-
-            SccpConfigurationData_OldFormat _sccp = reader.read(ConfigurationData.SCCP, SccpConfigurationData_OldFormat.class);
-            this.sccp.setRouteOnGtMode(_sccp.isRouteOnGtMode());
-            this.sccp.setRemoteSpc(_sccp.getRemoteSpc());
-            this.sccp.setLocalSpc(_sccp.getLocalSpc());
-            this.sccp.setNi(_sccp.getNi());
-            this.sccp.setRemoteSsn(_sccp.getRemoteSsn());
-            this.sccp.setLocalSsn(_sccp.getLocalSsn());
-            this.sccp.setGlobalTitleType(_sccp.getGlobalTitleType());
-            this.sccp.setNatureOfAddress(new NatureOfAddressType(_sccp.getNatureOfAddress().getValue()));
-            this.sccp.setNumberingPlan(new NumberingPlanSccpType(_sccp.getNumberingPlan().getValue()));
-            this.sccp.setTranslationType(_sccp.getTranslationType());
-            this.sccp.setCallingPartyAddressDigits(_sccp.getCallingPartyAddressDigits());
-            // this.sccp.setExtraLocalAddressDigits(_sccp.getExtraLocalAddressDigits());
-
-
-            reader.close();
-
-            return true;
-
-        } catch (Exception ex) {
-            this.sendNotif(SOURCE_NAME, "Error while reading the Host state from file", ex, Level.WARN);
-            return false;
+            XMLObjectWriter writer = XMLObjectWriter.newInstance(new FileOutputStream(persistFile.toString()));
+            writer.setBinding(binding);
+            // writer.setReferenceResolver(new XMLReferenceResolver());
+            writer.setIndentation(TAB_INDENT);
+            writer.write(this.configurationData, CONFIGURATION_DATA, ConfigurationData.class);
+            writer.close();
+        } catch (Exception e) {
+            this.sendNotif(SOURCE_NAME, "Error while persisting the Host state in file", e, Level.ERROR);
         }
     }
+*/
+
 }

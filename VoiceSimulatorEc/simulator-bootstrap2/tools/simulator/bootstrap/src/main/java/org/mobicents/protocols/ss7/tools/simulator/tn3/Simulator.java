@@ -30,9 +30,6 @@ import java.util.Map;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import org.mobicents.protocols.ss7.tools.simulator.level1.M3uaManMBean;
-import org.mobicents.protocols.ss7.tools.simulator.level2.SccpManMBean;
-import org.mobicents.protocols.ss7.tools.simulator.level3.CapManMBean;
 import org.mobicents.protocols.ss7.tools.simulator.management.TesterHost;
 import org.mobicents.protocols.ss7.tools.simulator.management.TesterHostMBean;
 import org.mobicents.protocols.ss7.tools.simulator.tests.cap.CamelConfigurationData;
@@ -47,7 +44,7 @@ public class Simulator implements NotificationListener {
 
 
     private TesterHost testerHost;
-    private TesterHostMBean testerHostMBean;
+   // private TesterHostMBean testerHostMBean;
     //private M3uaManMBean m3ua; //verificar luego.
     //private SccpManMBean sccp;
     //private CapManMBean cap;
@@ -63,11 +60,12 @@ public class Simulator implements NotificationListener {
     private boolean establishTemporaryConnectionReceived = false;
 
     public Simulator() {
-        //openTest();
+        
     }
 
     public TesterHostMBean getHost(){
-    	return this.testerHostMBean;
+    	//return this.testerHostMBean;
+    	return this.testerHost;
     }
 
     public int getActualProgress(){
@@ -82,72 +80,102 @@ public class Simulator implements NotificationListener {
     	return this.establishTemporaryConnectionReceived;
     }
 
-    public void openTest(Map <String, Object> inputParametersMap, CamelConfigurationData camelConfigurationData) {
+    public void makeCall(Map <String, Object> inputParametersMap, CamelConfigurationData camelConfigurationData) {
         // Starting tests
     	int maxCallDuration = ((Integer) inputParametersMap.get("callDuration")).intValue();
     	long acrWaitTime = ((Long) inputParametersMap.get("acrWaitTime")).longValue();
 
     	this.testerHost.getTestCapSsfMan().setMaxCallDuration(maxCallDuration);
     	this.testerHost.getTestCapSsfMan().setCurrentCallDuration(0);
-    	this.testerHost.getTestCapSsfMan().setPercentCallDuration(0);
+    	this.testerHost.getTestCapSsfMan().setProgressCallDuration(0);
     	this.testerHost.getTestCapSsfMan().setMaxCallPeriodDuration(0);
-    	this.testerHost.getTestCapSsfMan().setPercentCallDuration(0);
     	this.testerHost.getTestCapSsfMan().setCamelConfigurationData(camelConfigurationData);
     	this.testerHost.getTestCapSsfMan().setAcrWaitTime(acrWaitTime);
     	this.actualProgress = 0;
+    	this.releaseCallReceived = false;
+    	this.establishTemporaryConnectionReceived = false;
         this.capSsf.performInitialDp("");
+        
     }
 
 
     public void refreshState() {
 
+    	/*
         if (this.testerHostMBean instanceof TesterHost) {
-            TesterHost thost = (TesterHost)testerHostMBean;
+            TesterHost thost = (TesterHost)testerHostMBean;            
             thost.execute();
-       }
-
+       }       
+    
        System.out.println("Level1 State : " + this.testerHostMBean.getL1State());
        System.out.println("Level2 State : " + this.testerHostMBean.getL2State());
        System.out.println("Level3 State : " + this.testerHostMBean.getL3State());
        System.out.println("Task   State : " + this.testerHostMBean.getTestTaskState());
-
+    	 */
+    	testerHost.execute();
+        System.out.println("Level1 State : " + this.testerHost.getL1State());
+        System.out.println("Level2 State : " + this.testerHost.getL2State());
+        System.out.println("Level3 State : " + this.testerHost.getL3State());
+        System.out.println("Task   State : " + this.testerHost.getTestTaskState());
     }
 
     public boolean getM3uaState() {
 
        boolean m3uaState = false;
+       /*
     	if (this.testerHostMBean instanceof TesterHost) {
             TesterHost thost = (TesterHost)testerHostMBean;
             m3uaState = thost.getM3uaMan().getM3uaState();
-       }
-
-    	return m3uaState;
+       }*/
+       m3uaState = this.testerHost.getM3uaMan().getM3uaState(); 
+       return m3uaState;
 
     }
 
     public boolean getSctpState() {
         boolean sctpState = false;
-     	if (this.testerHostMBean instanceof TesterHost) {
+     	/*
+        if (this.testerHostMBean instanceof TesterHost) {
              TesterHost thost = (TesterHost)testerHostMBean;
              sctpState = thost.getM3uaMan().getSctpState();
-        }
+        }*/
+        sctpState = this.testerHost.getM3uaMan().getSctpState();
         return sctpState;
     }
 
     public boolean getSccpState() {
         boolean sccpState = false;
-     	if (this.testerHostMBean instanceof TesterHost) {
+     	/*
+        if (this.testerHostMBean instanceof TesterHost) {
              TesterHost thost = (TesterHost)testerHostMBean;
              sccpState = thost.getSccpMan().getSccpState();
-        }
+        }*/
+        sccpState = this.testerHost.getSccpMan().getSccpState();
         return sccpState;
     }
+    
+    public void startLocal(Map <String , Object> inputParametersMap) {
+        // creating a testerHost
+    	String appName = (String) inputParametersMap.get("appName");
+    	boolean configureStackFromFile = ((Boolean)inputParametersMap.get("configureStackFromFile")).booleanValue();
+        String sim_home = System.getenv(TesterHost.SIMULATOR_HOME_VAR);
+        if (sim_home != null)
+            sim_home += File.separator + "data";
+        TesterHost host = new TesterHost(appName, sim_home, configureStackFromFile);
 
-    protected void startHost(String appName, boolean isRemote, final TesterHost testerHost, TesterHostMBean host, M3uaManMBean m3ua,
-            SccpManMBean sccp, CapManMBean cap, TestCapSsfManMBean capSsf ) {
+        host.addNotificationListener(this, null, null);
+        this.startHost(appName + "-local", false, host
+        		//, host, host.getM3uaMan(), host.getSccpMan(), host.getCapMan()
+        		, host.getTestCapSsfMan());
+
+    }
+
+    protected void startHost(String appName, boolean isRemote, final TesterHost testerHost
+    		//, TesterHostMBean host, M3uaManMBean m3ua, SccpManMBean sccp, CapManMBean cap
+    		, TestCapSsfManMBean capSsf	) {
 
         this.testerHost = testerHost;
-        this.testerHostMBean = host;
+        //this.testerHostMBean = host;
         //this.m3ua = m3ua;
         //this.sccp = sccp;
         //this.cap = cap;
@@ -160,44 +188,22 @@ public class Simulator implements NotificationListener {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 if (testerHost != null) {
-                    testerHost.checkStore();
+                    //testerHost.checkStore();
                     testerHost.execute();
-
                     // TODO: extra action for updating GUI from host notifications if a host is local
                 }
             }
         });
         this.tm.start();
-        this.testerHostMBean.start(); //added
+        //this.testerHostMBean.start(); //added
+        this.testerHost.start();
 
-        /*
-        this.tm2 = new javax.swing.Timer(5000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                refreshState();
-            }
-        });
-        this.tm2.start();
-        */
     }
 
     public void stopHost(){
-    	this.testerHostMBean.stop();
-        testerHost.quit();
-    }
-
-    public void startLocal(Map <String , Object> inputParametersMap) {
-        // creating a testerHost
-    	String appName = (String) inputParametersMap.get("appName");
-    	boolean configureStackFromFile = ((Boolean)inputParametersMap.get("configureStackFromFile")).booleanValue();
-        String sim_home = System.getenv(TesterHost.SIMULATOR_HOME_VAR);
-        if (sim_home != null)
-            sim_home += File.separator + "data";
-        TesterHost host = new TesterHost(appName, sim_home, configureStackFromFile);
-
-        host.addNotificationListener(this, null, null);
-        this.startHost(appName + "-local", false, host, host, host.getM3uaMan(), host.getSccpMan(),
-                host.getCapMan(), host.getTestCapSsfMan());
-
+    	this.tm.stop(); //added
+    	//this.testerHostMBean.stop();
+        this.testerHost.quit();
     }
 
     @Override
