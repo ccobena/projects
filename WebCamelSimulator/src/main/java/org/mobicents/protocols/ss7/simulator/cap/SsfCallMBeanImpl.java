@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.management.Notification;
@@ -33,8 +35,6 @@ import org.mobicents.protocols.ss7.cap.api.dialog.CAPGprsReferenceNumber;
 import org.mobicents.protocols.ss7.cap.api.dialog.CAPNoticeProblemDiagnostic;
 import org.mobicents.protocols.ss7.cap.api.dialog.CAPUserAbortReason;
 import org.mobicents.protocols.ss7.cap.api.errors.CAPErrorMessage;
-import org.mobicents.protocols.ss7.cap.api.isup.CalledPartyNumberCap;
-import org.mobicents.protocols.ss7.cap.api.isup.CallingPartyNumberCap;
 import org.mobicents.protocols.ss7.cap.api.primitives.EventTypeBCSM;
 import org.mobicents.protocols.ss7.cap.api.primitives.ReceivingSideID;
 import org.mobicents.protocols.ss7.cap.api.primitives.TimeAndTimezone;
@@ -73,7 +73,6 @@ import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.RequestRe
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.ResetTimerRequest;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.SendChargingInformationRequest;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.SpecializedResourceReportRequest;
-import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.DestinationRoutingAddress;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.EventSpecificInformationBCSM;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.TimeDurationChargingResult;
 import org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.primitive.TimeInformation;
@@ -93,31 +92,32 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 
 	private CAPProvider capProvider;
     private CAPParameterFactory paramFact;
-    private CAPDialogCircuitSwitchedCall currentCapDialog;
-    private CallContent cc;
-
-    private int maxCallDuration;
-    private int currentCallDuration;
-    private int maxCallPeriodDuration;
-    private int progressCallDuration;
+    //private CAPDialogCircuitSwitchedCall currentCapDialog;
+    
     private CamelConfigurationData camelConfigurationData = null;
-    private long acrWaitTime;
-    private int countApplyChargingReport = 0;
+
+// Next counters could be used to get Total statistics.    
+    private int countInitialDP = 0;
+    private int countEventReportBCSM = 0;
     private int countApplyCharging = 0;
+    private int countApplyChargingReport = 0;
     private int countReleaseCall = 0;
-    //private String currentRequestDef = "";
-
-
-    public SsfCallMBeanImpl(CamelConfigurationData camelConfigurationData, String appProfileName, int callDuration, int acrWaitTime) throws NamingException {
-
-    	this.setupLog4j(appProfileName);
-    	this.setCamelConfigurationData(camelConfigurationData);
-    	this.setMaxCallDuration(callDuration);
-    	this.setAcrWaitTime(acrWaitTime);
-    	this.setCurrentCallDuration(0);
-    	this.setProgressCallDuration(0);
+    private int countEstablishTemporaryConnection = 0;
+    
+    /* Map to control data related to each dialog. 
+       Key=DialogId , 
+       Value=Integer Array with data related to every call.
+       Array[0] -> Current Call Duration 	
+       Array[1] -> Max Call Duration
+       Array[2] -> Acr Wait Time
+       Array[3] -> Progress Call (%)	
     	
+    */
+    private Map <Long,int[]> callRelatedDataByDialog = new HashMap <Long, int[]>();
+    private static SsfCallMBeanImpl instance;
 
+
+    public SsfCallMBeanImpl() throws NamingException {
     	Properties props = new Properties();
     	props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
     	props.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming:org.jnp.interfaces");
@@ -132,9 +132,22 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         }
 
         setParamFact(capProvider.getCAPParameterFactory());
-
         capProvider.addCAPDialogListener(this);
         capProvider.getCAPServiceCircuitSwitchedCall().addCAPServiceListener(this);
+   }
+    
+    public static synchronized SsfCallMBeanImpl getInstance() throws NamingException{
+    	if (instance == null){
+    		instance = new SsfCallMBeanImpl();	
+    	}
+    	return instance;
+    }
+    
+    public void init (CamelConfigurationData camelConfigurationData, String appProfileName, int [] userCallRelatedData){
+
+    	this.setupLog4j(appProfileName);
+    	this.setCamelConfigurationData(camelConfigurationData);
+    	//this.setProgressCallDuration(0);    	
     }
 
     public CAPProvider getCAPProvider() {
@@ -144,49 +157,23 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
 	public void start() {
         // Make the circuitSwitchedCall service activated
-        capProvider.getCAPServiceCircuitSwitchedCall().acivate();
-        currentCapDialog = null;
+    	if (!capProvider.getCAPServiceCircuitSwitchedCall().isActivated()){
+    		capProvider.getCAPServiceCircuitSwitchedCall().acivate();
+    		//currentCapDialog = null;
+    	}	
     }
 
     @Override
 	public void stop() {
-        capProvider.getCAPServiceCircuitSwitchedCall().deactivate();
+    	if (capProvider.getCAPServiceCircuitSwitchedCall().isActivated())
+    		capProvider.getCAPServiceCircuitSwitchedCall().deactivate();
     }
-
+    
     @Override
-	public void performApplyChargingReport(String msg) {
-
-    	CAPDialogCircuitSwitchedCall curDialog = currentCapDialog;
-        String uData = "";
-
-        if (curDialog == null)
-        	this.sendNotif(SOURCE_NAME, "The current dialog does not exist. Start it previousely or wait of starting by a peer", uData, Level.DEBUG);
-
-        try {
-            TimeInformation timeInformation = capProvider.getCAPParameterFactory().createTimeInformation(this.currentCallDuration);
-            TimeDurationChargingResult timeDurationChargingResult = capProvider.getCAPParameterFactory()
-                    .createTimeDurationChargingResult(
-                    		this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getPartyToCharge(),
-                            timeInformation,
-                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getLegActive(),
-                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getCallLegReleasedAtTcpExpiry(),
-                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getExtensions(),
-                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getAChChargingAddress());
-            curDialog.addApplyChargingReportRequest(timeDurationChargingResult);
-            curDialog.send();
-            this.setCountApplyChargingReport(this.getCountApplyChargingReport() + 1);
-            uData = "Current Call Duration : " + this.currentCallDuration;
-            this.sendNotif(SOURCE_NAME, "Apply Charging Report Sent : ", uData, Level.INFO);
-
-        } catch (CAPException ex) {
-            this.sendNotif(SOURCE_NAME, "Exception when sending applyChargingReport", ex.toString(), Level.DEBUG);
-        }
-    }
-
-    @Override
-	public void performInitialDP(CAPApplicationContext capAppContext, SccpAddress origAddress, SccpAddress remoteAddress) throws CAPException {
-
-    	currentCapDialog = capProvider.getCAPServiceCircuitSwitchedCall().createNewDialog(capAppContext, origAddress, remoteAddress);
+	public Long performInitialDP(CAPApplicationContext capAppContext, SccpAddress origAddress, SccpAddress remoteAddress, int [] userCallRelatedData) throws CAPException {
+    	
+    	CAPDialogCircuitSwitchedCall currentCapDialog = capProvider.getCAPServiceCircuitSwitchedCall().createNewDialog(capAppContext, origAddress, remoteAddress);
+    	
     	Calendar now = Calendar.getInstance();
         TimeAndTimezone timeAndTimezone = capProvider.getCAPParameterFactory().createTimeAndTimezone(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1 , now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), now.get(Calendar.SECOND), 10);
         currentCapDialog.addInitialDPRequest(
@@ -223,63 +210,106 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         		this.getCamelConfigurationData().getInitialDPRequest().getInitialDPArgExtension());//null
 
         // This will initiate the TC-BEGIN with INVOKE component
+        Long localDialogId = currentCapDialog.getLocalDialogId();
+        
+        this.callRelatedDataByDialog.put(localDialogId, userCallRelatedData);
+        currentCapDialog.setUserObject(userCallRelatedData);
         currentCapDialog.send();
-
-        this.cc = new CallContent();
-        this.cc.step = Step.initialDPSent;
-        this.cc.calledPartyNumber = this.getCamelConfigurationData().getInitialDPRequest().getCalledPartyNumber();
-        this.cc.callingPartyNumber = this.getCamelConfigurationData().getInitialDPRequest().getCallingPartyNumber();
-
-        String uData = "";
-        if (this.cc.callingPartyNumber != null)
-        	uData = "Calling Number : " + this.cc.callingPartyNumber.getCallingPartyNumber().getAddress() + "\n";
-        if (this.cc.calledPartyNumber != null)
-        	uData = uData + "Called Number : " + this.cc.calledPartyNumber;
-
-        this.sendNotif(SOURCE_NAME, "Initial DP Sent : ", uData, Level.INFO);
+        
+        this.setCountInitialDP(this.getCountInitialDP() + 1);
+        Map <String,String> uData = new HashMap <String, String>();
+        uData.put("uMessage", "Calling Number=" + this.getCamelConfigurationData().getInitialDPRequest().getCallingPartyNumber().getCallingPartyNumber().getAddress());
+        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+        
+        
+        this.sendNotif(SOURCE_NAME, "Initial DP Sent :" , uData, Level.INFO);
+        
+        return localDialogId;
     }
 
     @Override
-	public void performEventReportBCSM_OAnswer(OAnswerSpecificInfo oAnswerSpecificInfo, ReceivingSideID legID,
+	public void performApplyChargingReport(CAPDialogCircuitSwitchedCall curDialog, String msg) {
+    	
+    	//CAPDialogCircuitSwitchedCall curDialog = currentCapDialog;
+    	Map <String,String> uData = new HashMap <String, String>();
+        
+        if (curDialog == null){
+        	uData.put("uMessage", "");
+        	this.sendNotif(SOURCE_NAME, "The current dialog does not exist. Start it previousely or wait of starting by a peer", uData, Level.DEBUG);
+        }
+        
+        try {
+        	int [] callRelatedData = (int []) curDialog.getUserObject();
+        	int currentCallDuration = callRelatedData [0];
+            TimeInformation timeInformation = capProvider.getCAPParameterFactory().createTimeInformation(currentCallDuration);
+            TimeDurationChargingResult timeDurationChargingResult = capProvider.getCAPParameterFactory()
+                    .createTimeDurationChargingResult(
+                    		this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getPartyToCharge(),
+                            timeInformation,
+                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getLegActive(),
+                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getCallLegReleasedAtTcpExpiry(),
+                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getExtensions(),
+                            this.getCamelConfigurationData().getApplyChargingReportRequest().getTimeDurationChargingResult().getAChChargingAddress());
+            curDialog.addApplyChargingReportRequest(timeDurationChargingResult);
+            
+            curDialog.send();
+            this.setCountApplyChargingReport(this.getCountApplyChargingReport() + 1);
+            
+            uData.put("uMessage", "Current Call Duration=" + currentCallDuration);
+            uData.put("uLocalDialogId", String.valueOf(curDialog.getLocalDialogId().longValue()));
+            
+            this.sendNotif(SOURCE_NAME, "Apply Charging Report Sent :", uData, Level.INFO);
+
+        } catch (CAPException ex) {
+        	uData.put("uMessage", ex.toString());
+            this.sendNotif(SOURCE_NAME, "Exception when sending applyChargingReport", uData, Level.DEBUG);
+        }
+    }
+
+    
+    @Override
+	public void performEventReportBCSM_OAnswer(CAPDialogCircuitSwitchedCall currentCapDialog, OAnswerSpecificInfo oAnswerSpecificInfo, ReceivingSideID legID,
             MiscCallInfo miscCallInfo) throws CAPException {
-        if (currentCapDialog != null && this.cc != null) {
+        if (currentCapDialog != null) {
             EventSpecificInformationBCSM eventSpecificInformationBCSM = this.capProvider.getCAPParameterFactory()
                     .createEventSpecificInformationBCSM(oAnswerSpecificInfo);
             currentCapDialog.addEventReportBCSMRequest(EventTypeBCSM.oAnswer, eventSpecificInformationBCSM, legID,
                     miscCallInfo, null);
             currentCapDialog.send();
-            this.cc.step = Step.answered;
-            String uData = "";
+            Map <String,String> uData = new HashMap <String, String>();
+            uData.put("uMessage", "");
+            uData.put("uLocalDialogId", String.valueOf(currentCapDialog.getLocalDialogId().longValue()));
             this.sendNotif(SOURCE_NAME, "Event Report BCSM Answer Sent : ", uData, Level.INFO);
         }
     }
 
-    public void performEventReportBCSM_ODisconnect(ODisconnectSpecificInfo oDisconnectSpecificInfo, ReceivingSideID legID,
+    public void performEventReportBCSM_ODisconnect(CAPDialogCircuitSwitchedCall currentCapDialog,ODisconnectSpecificInfo oDisconnectSpecificInfo, ReceivingSideID legID,
             MiscCallInfo miscCallInfo) throws CAPException {
-        if (currentCapDialog != null && this.cc != null) {
+        if (currentCapDialog != null) {
             EventSpecificInformationBCSM eventSpecificInformationBCSM = this.capProvider.getCAPParameterFactory()
                     .createEventSpecificInformationBCSM(oDisconnectSpecificInfo);
             currentCapDialog.addEventReportBCSMRequest(EventTypeBCSM.oDisconnect, eventSpecificInformationBCSM, legID,
                     miscCallInfo, null);
             currentCapDialog.send();
-            this.cc.step = Step.disconnected;
-            String uData = "";
+            Map <String,String> uData = new HashMap <String, String>();
+            uData.put("uMessage", "");
+            uData.put("uLocalDialogId", String.valueOf(currentCapDialog.getLocalDialogId().longValue()));
+            
             this.sendNotif(SOURCE_NAME, "Event Report BCSM Disconnect Sent : ", uData, Level.INFO);
         }
     }
 
     @Override
     public void onRequestReportBCSMEventRequest(RequestReportBCSMEventRequest ind) {
-    	if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
-            this.cc.requestReportBCSMEventRequest = ind;
+    	if (ind.getCAPDialog() != null ) {
             ind.getCAPDialog().processInvokeWithoutAnswer(ind.getInvokeId());
         }
     }
 
     @Override
     public void onActivityTestRequest(ActivityTestRequest ind) {
-        if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
-            this.cc.activityTestInvokeId = ind.getInvokeId();
+        if (ind.getCAPDialog() != null) {
+            //this.cc.activityTestInvokeId = ind.getInvokeId();
         }
     }
 
@@ -291,35 +321,33 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 
     @Override
     public void onContinueRequest(ContinueRequest ind) {
-        this.cc.step = Step.callAllowed;
         ind.getCAPDialog().processInvokeWithoutAnswer(ind.getInvokeId());
         // sending Continue to use the original calledPartyAddress
     }
 
     @Override
     public void onConnectRequest(ConnectRequest ind) {
-    	if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
-    		this.cc.step = Step.callAllowed;
-            this.cc.destinationRoutingAddress = ind.getDestinationRoutingAddress();
-            ind.getCAPDialog().processInvokeWithoutAnswer(ind.getInvokeId());
+    	if (ind.getCAPDialog() != null) {
+    		ind.getCAPDialog().processInvokeWithoutAnswer(ind.getInvokeId());
         }
         // sending Connect to force routing the call to a new number
     }
 
     @Override
     public void onDialogTimeout(CAPDialog capDialog) {
-        if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
+        if (capDialog != null) {
             // if the call is still up - keep the sialog alive
-            currentCapDialog.keepAlive();
+            capDialog.keepAlive();
         }
     }
 
     @Override
     public void onDialogDelimiter(CAPDialog capDialog) {
-        if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
+        /*
+    	if (capDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
             if (this.cc.activityTestInvokeId != null) {
                 try {
-                    currentCapDialog.addActivityTestResponse(this.cc.activityTestInvokeId);
+                    capDialog.addActivityTestResponse(this.cc.activityTestInvokeId);
                     this.cc.activityTestInvokeId = null;
                     currentCapDialog.send();
                 } catch (CAPException e) {
@@ -327,7 +355,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
     @Override
@@ -360,43 +388,63 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 
     }
 
+
     @Override
     public void onApplyChargingRequest(ApplyChargingRequest arg0) {
+    	CAPDialogCircuitSwitchedCall currentCapDialog = arg0.getCAPDialog();
+    	Long localDialogId = currentCapDialog.getLocalDialogId();
         this.setCountApplyCharging(this.getCountApplyCharging() + 1);
-        //System.out.println("He recibido un ACR : " + this.getCountApplyCharging());
-    	
-        String uData = "";
+           
+        int [] callRelatedData = (int []) currentCapDialog.getUserObject();
+        int currentCallDuration = callRelatedData[0];
+        int maxCallDuration = callRelatedData[1];
+        int acrWaitTime  = callRelatedData[2];
+        int progressCallDuration = callRelatedData[3];
+        
+        Map <String,String> uData = new HashMap <String, String>();
+        String uMessage = "";
+        boolean mustSendApplyChargingReport = false;
+        
         try{
-            if (this.maxCallDuration > 0){
-                this.maxCallPeriodDuration = (int) arg0.getAChBillingChargingCharacteristics().getMaxCallPeriodDuration();
-                if (this.currentCallDuration <= this.maxCallDuration){
-                	if ( (this.currentCallDuration + this.maxCallPeriodDuration )> this.maxCallDuration ){
-                        int lastCallPeriodDuration = this.maxCallDuration - this.currentCallDuration;
-                        this.setMaxCallPeriodDuration(lastCallPeriodDuration);
+            if (maxCallDuration > 0){
+                int maxCallPeriodDuration = (int) arg0.getAChBillingChargingCharacteristics().getMaxCallPeriodDuration();
+                if (currentCallDuration <= maxCallDuration){
+                	if ( (currentCallDuration + maxCallPeriodDuration )> maxCallDuration ){
+                        int lastCallPeriodDuration = maxCallDuration - currentCallDuration;
+                        maxCallPeriodDuration = lastCallPeriodDuration;
                     }
-                    this.currentCallDuration = this.currentCallDuration + this.maxCallPeriodDuration;
-                    if (this.acrWaitTime > 0)
-                        Thread.sleep(this.acrWaitTime);
-                    this.performApplyChargingReport("");
+                    currentCallDuration = currentCallDuration + maxCallPeriodDuration;
+                    mustSendApplyChargingReport = true;                    
                 }else{
                 //do nothing, Release call should have been received at this stage
                 }
-                double updateProgress = ((double)this.currentCallDuration/(double)this.maxCallDuration) * 100;
+                double updateProgress = ((double)currentCallDuration/(double)maxCallDuration) * 100;
                 updateProgress = Math.floor(updateProgress);
-                uData = "";
-                System.out.println("UpdatePercent : " + updateProgress + " - Current Call Duration : " + this.currentCallDuration + " - Max Call Duration : " + this.maxCallDuration);
-                if (this.progressCallDuration < updateProgress){
-                    this.progressCallDuration = (int) updateProgress;
-                    uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
-                }
-                //System.out.println("ProgressCallDuration : " + this.progressCallDuration);
+                                
+                if (progressCallDuration < updateProgress){
+                    progressCallDuration = (int) updateProgress;
+                    uMessage = progressCallDuration + "% completed - CurrentCallDuration=" + currentCallDuration + " MaxCallDuration=" + maxCallDuration;
+                }                
             }
-            if (currentCapDialog != null && this.cc != null && this.cc.step != Step.disconnected) {
-            	this.cc.step = Step.answered;
+            if (mustSendApplyChargingReport){
+	            if (acrWaitTime > 0) Thread.sleep(acrWaitTime);
+
+	            callRelatedData[0] = currentCallDuration;
+	            callRelatedData[3] = progressCallDuration;
+	            currentCapDialog.setUserObject(callRelatedData);
+	            
+	            this.callRelatedDataByDialog.put(localDialogId, callRelatedData);
+	            this.performApplyChargingReport(currentCapDialog,"");
             }
-            this.sendNotif(SOURCE_NAME, "Apply Charging Received :", uData, Level.INFO);
+            
+            uData.put("uMessage", uMessage);
+            uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+            
+            
+            this.sendNotif(SOURCE_NAME, "Apply Charging Received :" , uData, Level.INFO);
         }catch(InterruptedException e){
-            this.sendNotif(SOURCE_NAME, "Exception when applying acrWaitTime", e.toString(), Level.DEBUG);
+        	uData.put("uMessage", e.toString());
+            this.sendNotif(SOURCE_NAME, "Exception when applying acrWaitTime", uData, Level.DEBUG);
         	e.printStackTrace();
         }
     }
@@ -404,7 +452,13 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onEventReportBCSMRequest(EventReportBCSMRequest ind) {
         // TODO Auto-generated method stub
-
+    	Long localDialogId = ind.getCAPDialog().getLocalDialogId();
+    	Map <String,String> uData = new HashMap <String, String>();
+        String uMessage = "";
+        uData.put("uMessage", uMessage);
+        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+        this.sendNotif(SOURCE_NAME, "Event Report BCSM Received :" , uData, Level.INFO);
+   
     }
 
     @Override
@@ -416,33 +470,41 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onReleaseCallRequest(ReleaseCallRequest ind) {
 
+    	Long localDialogId = ind.getCAPDialog().getLocalDialogId();
+    	int [] callRelatedData = (int []) ind.getCAPDialog().getUserObject();
+        int currentCallDuration = callRelatedData[0];
+        int maxCallDuration = callRelatedData[1];
+        int progressCallDuration = callRelatedData[3];
+        
     	this.closeCurrentDialog(ind.getCAPDialog());
-    	this.cc = null;
     	this.setCountReleaseCall(this.getCountReleaseCall() + 1);
-    	String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
-        this.sendNotif(SOURCE_NAME, "Release Call Received :", uData, Level.INFO);
-        this.setCurrentCallDuration(0);
-        this.setMaxCallDuration(0);
-        this.setMaxCallPeriodDuration(0);
-        //this.setProgressCallDuration(0);        
+    	
+    	
+    	String uMessage = progressCallDuration + "% completed - CurrentCallDuration=" + currentCallDuration + " MaxCallDuration=" + maxCallDuration;
+    	Map <String,String> uData = new HashMap <String, String>();
+        uData.put("uMessage", uMessage);
+        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+        
+    	this.sendNotif(SOURCE_NAME, "Release Call Received :", uData, Level.INFO);                
                  
     }
 
     @Override
 	public String closeCurrentDialog(CAPDialogCircuitSwitchedCall curDialog) {
-
         //CAPDialogCircuitSwitchedCall curDialog = currentCapDialog;
-        if (curDialog != null) {
+    	if (curDialog != null) {
             try {
                 if (curDialog.getState() == CAPDialogState.Active)
                     curDialog.close(false);
                 else
                     curDialog.abort(CAPUserAbortReason.no_reason_given);
-                this.doRemoveDialog();
+                this.doRemoveDialog(curDialog.getLocalDialogId());
                 return "The current dialog has been closed";
             } catch (CAPException e) {
-                this.doRemoveDialog();
-                this.sendNotif(SOURCE_NAME, "Exception when closing a dialog", e.toString(), Level.DEBUG);
+                this.doRemoveDialog(curDialog.getLocalDialogId());
+                Map <String,String> uData = new HashMap <String, String>();
+                uData.put("uMessage", e.toString());
+                this.sendNotif(SOURCE_NAME, "Exception when closing a dialog", uData, Level.DEBUG);
                 return "Exception when closing the current dialog: " + e.toString();
             }
         } else {
@@ -450,10 +512,12 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         }
     }
 
-    private void doRemoveDialog() {
-    	currentCapDialog = null;
+    private void doRemoveDialog(Long dialogRemoved) {
+    	this.callRelatedDataByDialog.remove(dialogRemoved);
+    	//currentCapDialog = null;
         // currentRequestDef = "";
     }
+    
     @Override
     public void onCallGapRequest(org.mobicents.protocols.ss7.cap.api.service.circuitSwitchedCall.CallGapRequest ind) {
         // TODO Auto-generated method stub
@@ -481,12 +545,22 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onEstablishTemporaryConnectionRequest(EstablishTemporaryConnectionRequest ind) {
         // TODO Auto-generated method stub
+    	int [] callRelatedData = (int []) ind.getCAPDialog().getUserObject();
+        int currentCallDuration = callRelatedData[0];
+        int maxCallDuration = callRelatedData[1];
+        int progressCallDuration = callRelatedData[3];
+        Long localDialogId = ind.getCAPDialog().getLocalDialogId();
+        
         this.closeCurrentDialog(ind.getCAPDialog());
-        String uData = this.progressCallDuration + "% completed - CurrentCallDuration : " + this.currentCallDuration + " MaxCallDuration : " + this.maxCallDuration;
+        this.setCountEstablishTemporaryConnection(this.getCountEstablishTemporaryConnection() + 1);
+        
+        String uMessage = progressCallDuration + "% completed - CurrentCallDuration=" + currentCallDuration + " MaxCallDuration=" + maxCallDuration;
+        
+        Map <String,String> uData = new HashMap <String, String>();
+        uData.put("uMessage", uMessage);
+        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+        
         this.sendNotif(SOURCE_NAME, "Establish Temporary Connection Received :", uData, Level.DEBUG);
-        this.setCurrentCallDuration(0);
-        this.setMaxCallDuration(0);
-        this.setMaxCallPeriodDuration(0);
         
     }
 
@@ -582,8 +656,8 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 
     @Override
     public void onDialogRelease(CAPDialog capDialog) {
-        this.currentCapDialog = null;
-        this.cc = null;
+        //this.currentCapDialog = null;
+        //this.cc = null;
     }
 
     @Override
@@ -591,21 +665,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         // TODO Auto-generated method stub
 
     }
-
-    private enum Step {
-        initialDPSent, callAllowed, answered, disconnected;
-    }
-
-    private class CallContent {
-        public Step step;
-        public Long activityTestInvokeId;
-
-        public CalledPartyNumberCap calledPartyNumber;
-        public CallingPartyNumberCap callingPartyNumber;
-        public RequestReportBCSMEventRequest requestReportBCSMEventRequest;
-        public DestinationRoutingAddress destinationRoutingAddress;
-    }
-
+    
     @Override
     public void onContinueWithArgumentRequest(ContinueWithArgumentRequest ind) {
         // TODO Auto-generated method stub
@@ -668,8 +728,6 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 		this.camelConfigurationData = camelConfigurationData;
 	}
 
-
-
 	public int getCountApplyChargingReport() {
 		return countApplyChargingReport;
 	}
@@ -694,44 +752,16 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 		this.paramFact = paramFact;
 	}
 
-	public void setMaxCallDuration(int maxCallDuration) {
-        this.maxCallDuration = maxCallDuration;
-    }
-
-    public void setCurrentCallDuration(int currentCallDuration) {
-        this.currentCallDuration = currentCallDuration;
-    }
-
-    public void setMaxCallPeriodDuration(int maxCallPeriodDuration) {
-        this.maxCallPeriodDuration = maxCallPeriodDuration;
-    }
-
-    public void setProgressCallDuration(int percentCallDuration) {
-        this.progressCallDuration = percentCallDuration;
-    }
-
-    public void setAcrWaitTime(long AcrWaitTime) {
-        this.acrWaitTime = AcrWaitTime;
-    }
-
-    public int getMaxCallDuration() {
-        return this.maxCallDuration;
-    }
-
-    public int getCurrentCallDuration() {
-        return this.currentCallDuration;
-    }
-
-    public int getMaxCallPeriodDuration() {
-        return this.maxCallPeriodDuration;
-    }
-
-    public int getProgressCallDuration() {
-        return this.progressCallDuration;
-    }
-
-   public long getACRWaitTime() {
-        return this.acrWaitTime;
+	public int getProgressCallDuration(Long localDialogId) {
+		if (localDialogId != null){
+			if (callRelatedDataByDialog.containsKey(localDialogId)){
+				return this.callRelatedDataByDialog.get(localDialogId)[3];
+			}else{
+				return 0;
+			}
+		}else{
+			return 0;
+		}	
     }
 
 	public int getCountReleaseCall() {
@@ -777,29 +807,48 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 
 	}
 
-	public void sendNotif(String source, String msg, Throwable e, Level logLevel) {
-	    StringBuilder sb = new StringBuilder();
-	    for (StackTraceElement st : e.getStackTrace()) {
-	        if (sb.length() > 0)
-	            sb.append("\n");
-	        sb.append(st.toString());
-	    }
-	    this.doSendNotif(source, msg + " - " + e.toString(), sb.toString());
-
-	    //logger.log(logLevel, msg, e);
-	}
-
-	public void sendNotif(String source, String msg, String userData, Level logLevel) {
+	public void sendNotif(String source, String msg, Map <String,String> userData, Level logLevel) {
 
 	   this.doSendNotif(source, msg, userData);
-	   logger.log(Level.INFO, msg + "\n" + userData);
+	   String userMessage = "";
+	   if (userData.containsKey("uMessage")){
+		   userMessage = userData.get("uMessage");
+	   }
+	   if (userData.containsKey("uLocalDialogId")){
+		   userMessage += " LocalDialogId=" + userData.get("uLocalDialogId");
+	   }
+	   logger.log(Level.INFO, msg + "\n" + userMessage);
 	}
 
-	private synchronized void doSendNotif(String source, String msg, String userData) {
+	private synchronized void doSendNotif(String source, String msg, Map <String,String> userData) {
 	    Notification notif = new Notification("SS7_EVENT" + "-" + source, this, ++sequenceNumber,
 	            System.currentTimeMillis(), msg);
 	    notif.setUserData(userData);
 	    this.sendNotification(notif);
+	}
+
+	public int getCountEventReportBCSM() {
+		return countEventReportBCSM;
+	}
+
+	public void setCountEventReportBCSM(int countEventReportBCSM) {
+		this.countEventReportBCSM = countEventReportBCSM;
+	}
+
+	public int getCountEstablishTemporaryConnection() {
+		return countEstablishTemporaryConnection;
+	}
+
+	public void setCountEstablishTemporaryConnection(int countEstablishTemporaryConnection) {
+		this.countEstablishTemporaryConnection = countEstablishTemporaryConnection;
+	}
+
+	public int getCountInitialDP() {
+		return countInitialDP;
+	}
+
+	public void setCountInitialDP(int countInitialDP) {
+		this.countInitialDP = countInitialDP;
 	}
 
 }
