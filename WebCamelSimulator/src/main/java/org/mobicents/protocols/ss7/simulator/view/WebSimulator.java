@@ -10,14 +10,17 @@ import java.util.Properties;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
+import javax.naming.NamingException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.mobicents.protocols.ss7.cap.api.CAPApplicationContext;
+import org.mobicents.protocols.ss7.cap.api.CAPException;
 import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0001Impl;
 import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0010Impl;
@@ -48,18 +51,30 @@ public class WebSimulator implements NotificationListener {
 	private int acrWaitTime;
 	private String message;
     private int countInitialDP = 0;
-    private int countEventReportBCSM = 0;
+    private int countRequestReportBCSMEvent = 0;
     private int countApplyCharging = 0;
     private int countApplyChargingReport = 0;
     private int countReleaseCall = 0;
     private int countEstablishTemporaryConnection = 0;
+    private static final int SIM_STARTED = 0;
+    private static final int SIM_COMPLETED = 100;
 
 	private Long localDialogId;
-
+	
+	public WebSimulator(){
+		try {
+			this.singletonSsfCallMBeanImpl = SsfCallMBeanImpl.getInstance();			
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			logger.log(Level.DEBUG, "Naming Exception raised : ", e);			
+		}		
+	}
+	
 	public void makeCall(){
 		try{
 			// init variables
-			this.setActualProgress(0);
+			this.localDialogId = null;
+			this.setActualProgress(SIM_STARTED);
 			this.setMessage("");	
 			this.setCallCompleted(false);
 			this.setEstablishTemporaryConnectionReceived(false);
@@ -68,10 +83,9 @@ public class WebSimulator implements NotificationListener {
 			this.appConfigurationData = new AppConfigurationData(this.getAppProfileName());
 
 			// lookup for cap Provider and setup CamelData (IDP && ACR)
-			this.singletonSsfCallMBeanImpl = SsfCallMBeanImpl.getInstance();
 			this.singletonSsfCallMBeanImpl.addNotificationListener(this, null, null);
 			this.singletonSsfCallMBeanImpl.start();
-			
+						
 			// Parameters to be sent on IDP
 			CAPApplicationContext capAppContext = appConfigurationData.getSimulatorConfigurationData()
 			        .getTestCapSsfConfigurationData().getCapApplicationContext().getCAPApplicationContext();
@@ -88,8 +102,9 @@ public class WebSimulator implements NotificationListener {
 	        this.singletonSsfCallMBeanImpl.init(appConfigurationData.getCamelConfigurationData(), this.getAppProfileName(), userCallRelatedData);
 	        Long ldId = this.singletonSsfCallMBeanImpl.performInitialDP(capAppContext, origAddress, remoteAddress, userCallRelatedData);
 	        this.setLocalDialogId(ldId);
-	    }catch(Throwable e){
-	    	logger.log(Level.DEBUG, "Exception raised : ", e);
+	        
+	     }catch(CAPException e){
+	    	logger.log(Level.DEBUG, "CAP Exception raised : ", e);
 	     }
 	}
 
@@ -168,8 +183,6 @@ public class WebSimulator implements NotificationListener {
     	TextBuilder textBuilder = TextBuilder.newInstance();
     	URL url = this.getClass().getClassLoader().getResource(appName + ".log4j.properties");
 
-        //File f = new File("./" + propFileName);
-        //System.out.println(f.getAbsolutePath());
         if (url != null){
         	String path = url.getFile();
         	textBuilder.append(path);
@@ -205,87 +218,63 @@ public class WebSimulator implements NotificationListener {
     	if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")){
     		Map <String,String> m = (Map <String,String>)notification.getUserData();
         	String sLocalDialogId = null;
-        	
-    		switch (notification.getMessage()){
+        	if (m.containsKey("uLocalDialogId")){
+        		sLocalDialogId = m.get("uLocalDialogId");
+        	}
+        	switch (notification.getMessage()){
     			case "Apply Charging Received :" :
-    				this.setCountApplyCharging(this.getCountApplyCharging() + 1);
-    				this.setActualProgress(s);
-    	    		if (s >= 100 && !this.isCallCompleted()) {
-    	        		this.setCallCompleted(true);
-    	        		this.setMessage("Call Completed Successfully - Progress : " + this.getActualProgress() + "%");
-    	        	}
-    	    		break;
+    				if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
+    					this.setCountApplyCharging(this.getCountApplyCharging() + 1);
+	    				if (!this.isCallCompleted()){
+    						if (s >= SIM_COMPLETED) {
+	        	    			this.setActualProgress(SIM_COMPLETED - 1); // if call completed set to 99. RC will terminate the Dialog.
+	        	        		this.setCallCompleted(true);
+	        	        		this.setMessage("Call Completed Successfully - Progress : " + s + "%");
+	        	        	}else{
+	        	        		this.setActualProgress(s);
+	        	        	}
+    					}	
+    				}
+    				break;
     			case "Release Call Received :" :
-    				this.setCountReleaseCall(this.getCountReleaseCall() + 1);
-    				if (m.containsKey("uLocalDialogId")){
-    	        		sLocalDialogId = m.get("uLocalDialogId");
-    	        	}
-    	        	if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
-    		        	this.setReleaseCallReceived(true);
+    				if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
+    	        		this.setCountReleaseCall(this.getCountReleaseCall() + 1);
+        				this.setReleaseCallReceived(true);
     		        	if (!this.isCallCompleted()) { 
     		        		this.setMessage("RC message received from OCS - Progress : " + this.getActualProgress() + "%");
     		        	}
-    		        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed 
+    		        	this.setActualProgress(SIM_COMPLETED); // Setting 100 % to indicate simulation was completed 
     	        	}
     	        	break;
     			case "Establish Temporary Connection Received :" :
-    				this.setCountEstablishTemporaryConnection(this.getCountEstablishTemporaryConnection() + 1);
-    		    	if (m.containsKey("uLocalDialogId")){
-    	        		sLocalDialogId = m.get("uLocalDialogId");
-    	        	}
-    	        	if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
-    		        	this.setEstablishTemporaryConnectionReceived(true);
+    				if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
+    	        		this.setCountEstablishTemporaryConnection(this.getCountEstablishTemporaryConnection() + 1);
+    	        		this.setEstablishTemporaryConnectionReceived(true);
     		        	if (!this.isCallCompleted()) {
     		        		this.setMessage("ETC message received from OCS - Progress : " + this.getActualProgress() + "%");
     		        	}
-    		        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed
+    		        	this.setActualProgress(SIM_COMPLETED); // Setting 100 % to indicate simulation was completed
     	        	}
     	        	break;
     			case "Initial DP Sent :" :
-    				this.setCountInitialDP(this.getCountInitialDP() + 1);
+    				if (this.localDialogId == null){
+    					 	this.setCountInitialDP(this.getCountInitialDP() + 1);
+    				}
     				break;
-    			case "Event Report BCSM Received :" :
-    				this.setCountEventReportBCSM(this.getCountEventReportBCSM() + 1);
-    				break;
+    			case "Request Report BCSM Event Received :" :
+    				if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
+    	        		this.setCountRequestReportBCSMEvent(this.getCountRequestReportBCSMEvent() + 1);
+    	        	}
+    	        	break;
+    			case "Apply Charging Report Sent :" :
+    				if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
+    					this.setCountApplyChargingReport(this.getCountApplyChargingReport() + 1);
+    				}	
+    				break;    				
     			default :
     				break;
     		}
     	}
-    	/*
-    	if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Apply Charging Received :")){
-        	// do nothing
-    		this.setActualProgress(s);
-    		if (s >= 100 && !this.isCallCompleted()) {
-        		this.setCallCompleted(true);
-        		this.setMessage("Call Completed Successfully - Progress : " + this.getActualProgress() + "%");
-        	}        	
-        }else if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Release Call Received :")){
-        	Map <String,String> m = (Map <String,String>)notification.getUserData();
-        	String sLocalDialogId = null;
-        	if (m.containsKey("uLocalDialogId")){
-        		sLocalDialogId = m.get("uLocalDialogId");
-        	}
-        	if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
-	        	this.setReleaseCallReceived(true);
-	        	if (!this.isCallCompleted()) { 
-	        		this.setMessage("RC message received from OCS - Progress : " + this.getActualProgress() + "%");
-	        	}
-	        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed 
-        	}	
-        }else if (notification.getType().equals("SS7_EVENT-SSF_CALL_MBEAN")&& notification.getMessage().equals("Establish Temporary Connection Received :")){
-        	Map <String,String> m = (Map <String,String>)notification.getUserData();
-        	String sLocalDialogId = null;
-        	if (m.containsKey("uLocalDialogId")){
-        		sLocalDialogId = m.get("uLocalDialogId");
-        	}
-        	if (sLocalDialogId != null && this.localDialogId == Long.valueOf(sLocalDialogId)){
-	        	this.setEstablishTemporaryConnectionReceived(true);
-	        	if (!this.isCallCompleted()) {
-	        		this.setMessage("ETC message received from OCS - Progress : " + this.getActualProgress() + "%");
-	        	}
-	        	this.setActualProgress(100); // Setting 100 % to indicate simulation was completed
-        	}	
-        }*/
     }
 
 	public SsfCallMBeanImpl getSsfCallMBeanImpl() {
@@ -311,6 +300,12 @@ public class WebSimulator implements NotificationListener {
 	public void setReleaseCallReceived(boolean releaseCallReceived) {
 		if (releaseCallReceived){
 			this.singletonSsfCallMBeanImpl.stop();
+			try {
+				this.singletonSsfCallMBeanImpl.removeNotificationListener(this);
+			} catch (ListenerNotFoundException e) {
+				// TODO Auto-generated catch block
+				logger.log(Level.DEBUG, "ListenerNotFound Exception raised : ", e);
+			}
 		}
 		this.releaseCallReceived = releaseCallReceived;
 	}
@@ -322,6 +317,12 @@ public class WebSimulator implements NotificationListener {
 	public void setEstablishTemporaryConnectionReceived(boolean establishTemporaryConnectionReceived) {
 		if (establishTemporaryConnectionReceived){
 			this.singletonSsfCallMBeanImpl.stop(); //pending coding for IVR Calls
+			try {
+				this.singletonSsfCallMBeanImpl.removeNotificationListener(this);
+			} catch (ListenerNotFoundException e) {
+				// TODO Auto-generated catch block
+				logger.log(Level.DEBUG, "ListenerNotFound Exception raised : ", e);
+			}
 		}
 		this.establishTemporaryConnectionReceived = establishTemporaryConnectionReceived;
 	}
@@ -387,12 +388,12 @@ public class WebSimulator implements NotificationListener {
 		this.countInitialDP = countInitialDP;
 	}
 
-	public int getCountEventReportBCSM() {
-		return countEventReportBCSM;
+	public int getCountRequestReportBCSMEvent() {
+		return countRequestReportBCSMEvent;
 	}
 
-	public void setCountEventReportBCSM(int countEventReportBCSM) {
-		this.countEventReportBCSM = countEventReportBCSM;
+	public void setCountRequestReportBCSMEvent(int countRequestReportBCSMEvent) {
+		this.countRequestReportBCSMEvent = countRequestReportBCSMEvent;
 	}
 
 	public int getCountApplyCharging() {

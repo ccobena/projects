@@ -36,9 +36,7 @@ import javolution.xml.XMLObjectReader;
 public class AppConfigurationData {
 
     private String APP_NAME = "SS7 SIMULATOR";
-    //private Map<String, Object> inputParametersMap = new HashMap<String, Object>();
-	//private Simulator simulator = null;
-
+    
 	private static final String CLASS_ATTRIBUTE = "type";
 	private static final String PERSIST_CAMEL_FILE_NAME = "camel_configuration.xml";
 	private static final String CAMEL_CONFIGURATION_DATA = "CamelConfigurationData";
@@ -53,7 +51,8 @@ public class AppConfigurationData {
     private CamelConfigurationData camelConfigurationData = new CamelConfigurationData();
     private SimulatorConfigurationData simulatorConfigurationData = new SimulatorConfigurationData();
 
-        public AppConfigurationData(String appName) throws Throwable {
+    public AppConfigurationData(String appName){
+    	
             this.APP_NAME = appName;
         	String sim_home = System.getenv(AppConfigurationData.SIMULATOR_HOME_VAR);
             if (sim_home != null)
@@ -62,15 +61,6 @@ public class AppConfigurationData {
         	loadSimulatorConfigurationDataFromXMLFile(sim_home);
             loadCamelConfigurationDataFromXMLFile (sim_home);
 
-/*
-        	simulator.openTest(this.inputParametersMap, this.camelConfigurationData);
-        	boolean callCompleted = false;
-        	while (!callCompleted){
-        		Thread.sleep(200);
-        	    if (simulator.getActualProgress() >= 100 || simulator.getReleaseCallReceived() || simulator.getestablishTemporaryConnectionReceived())
-        	           callCompleted = true;
-        	 }
-*/
     }
 
     private void loadSimulatorConfigurationDataFromXMLFile(String persistDir) {

@@ -12,20 +12,23 @@
     <h:form id="simulatorForm">
     	<p:growl id="growl" life="2000" />	    
 		<p:panel id="panel" header="Simulator Data" style="margin-bottom:10px;">
-        	<h:panelGrid columns="2" cellpadding="5">
+        	<h:panelGrid columns="3" cellpadding="5">
 	        	
 	            <h:outputLabel for="acrWaitTime" value="ACR Wait Time: " />
 	            <p:inputNumber id="acrWaitTime" value="#{webSimulator.acrWaitTime}" required="false" label="ACR Wait Time" emptyValue="200" decimalPlaces="0" thousandSeparator="">
 	            	<f:validateLongRange minimum="0" maximum="60000"  />
 	            </p:inputNumber>
+	            <h:outputLabel for="acrWaitTime" value="(msec)" />
 	            
 	            <h:outputLabel for="callDuration" value="Call Duration: *" />
 	            <p:inputNumber id="callDuration" value="#{webSimulator.callDuration}" required="true" requiredMessage="Call Duration is required" label="Call Duration" decimalPlaces="0" thousandSeparator="">
 	            	<f:validateLongRange minimum="1" maximum="86400"  />
 	            </p:inputNumber>
+	            <h:outputLabel for="callDuration" value="(sec)" />
 	            
 	            <h:outputLabel for="profileName" value="Profile Name: " />
 	            <p:inputText id="profileName" value="#{webSimulator.appProfileName}" required="false" emptyValue="main" label="Profile Name" />
+	            <h:outputLabel for="profileName" value="" />
 	            
 	            <!-- onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));" -->
 	                                 
@@ -57,8 +60,8 @@
     		<h:panelGrid columns="6" cellpadding="18">
     			<h:outputText id="tIdp" value="IDP : "/>
     			<h:outputText id="cIdp" value="#{webSimulator.countInitialDP}"/>
-    			<h:outputText id="tErb" value="ER-BCSM : "/> 
-    			<h:outputText id="cErb" value="#{webSimulator.countEventReportBCSM}"/>
+    			<h:outputText id="tErb" value="RR-BCSM-E : "/> 
+    			<h:outputText id="cErb" value="#{webSimulator.countRequestReportBCSMEvent}"/>
     			<h:outputText id="tAc" value="AC : "/>
     			<h:outputText id="cAc" value="#{webSimulator.countApplyCharging}"/>
     			<h:outputText id="tAcr" value="ACR : "/>

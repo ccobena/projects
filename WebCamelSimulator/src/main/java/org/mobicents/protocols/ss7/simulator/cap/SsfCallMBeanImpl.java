@@ -221,7 +221,6 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         uData.put("uMessage", "Calling Number=" + this.getCamelConfigurationData().getInitialDPRequest().getCallingPartyNumber().getCallingPartyNumber().getAddress());
         uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
         
-        
         this.sendNotif(SOURCE_NAME, "Initial DP Sent :" , uData, Level.INFO);
         
         return localDialogId;
@@ -304,6 +303,12 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     	if (ind.getCAPDialog() != null ) {
             ind.getCAPDialog().processInvokeWithoutAnswer(ind.getInvokeId());
         }
+    	Long localDialogId = ind.getCAPDialog().getLocalDialogId();
+    	Map <String,String> uData = new HashMap <String, String>();
+        String uMessage = "";
+        uData.put("uMessage", uMessage);
+        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
+        this.sendNotif(SOURCE_NAME, "Request Report BCSM Event Received :" , uData, Level.INFO);
     }
 
     @Override
@@ -452,13 +457,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
     @Override
     public void onEventReportBCSMRequest(EventReportBCSMRequest ind) {
         // TODO Auto-generated method stub
-    	Long localDialogId = ind.getCAPDialog().getLocalDialogId();
-    	Map <String,String> uData = new HashMap <String, String>();
-        String uMessage = "";
-        uData.put("uMessage", uMessage);
-        uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
-        this.sendNotif(SOURCE_NAME, "Event Report BCSM Received :" , uData, Level.INFO);
-   
+    	
     }
 
     @Override
@@ -476,9 +475,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         int maxCallDuration = callRelatedData[1];
         int progressCallDuration = callRelatedData[3];
         
-    	this.closeCurrentDialog(ind.getCAPDialog());
     	this.setCountReleaseCall(this.getCountReleaseCall() + 1);
-    	
     	
     	String uMessage = progressCallDuration + "% completed - CurrentCallDuration=" + currentCallDuration + " MaxCallDuration=" + maxCallDuration;
     	Map <String,String> uData = new HashMap <String, String>();
@@ -486,7 +483,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
         
     	this.sendNotif(SOURCE_NAME, "Release Call Received :", uData, Level.INFO);                
-                 
+    	this.closeCurrentDialog(ind.getCAPDialog());
     }
 
     @Override
@@ -551,7 +548,6 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         int progressCallDuration = callRelatedData[3];
         Long localDialogId = ind.getCAPDialog().getLocalDialogId();
         
-        this.closeCurrentDialog(ind.getCAPDialog());
         this.setCountEstablishTemporaryConnection(this.getCountEstablishTemporaryConnection() + 1);
         
         String uMessage = progressCallDuration + "% completed - CurrentCallDuration=" + currentCallDuration + " MaxCallDuration=" + maxCallDuration;
@@ -561,6 +557,7 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
         uData.put("uLocalDialogId", String.valueOf(localDialogId.longValue()));
         
         this.sendNotif(SOURCE_NAME, "Establish Temporary Connection Received :", uData, Level.DEBUG);
+        this.closeCurrentDialog(ind.getCAPDialog());
         
     }
 
@@ -777,8 +774,6 @@ public class SsfCallMBeanImpl extends NotificationBroadcasterSupport implements 
 		TextBuilder textBuilder = TextBuilder.newInstance();
     	URL url = this.getClass().getClassLoader().getResource(appName + ".log4j.properties");
 
-        //File f = new File("./" + propFileName);
-        //System.out.println(f.getAbsolutePath());
         if (url != null){
         	String path = url.getFile();
         	textBuilder.append(path);
